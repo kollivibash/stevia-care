@@ -3,8 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import connect_db, close_db
 from app.routes import auth, ai, family, reminders, tracker
 import os
+from data_routes import router as data_router
 
 app = FastAPI(title="HealthPilot API", version="1.0.0")
+app.include_router(data_router)
 
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
