@@ -38,14 +38,14 @@ app.include_router(tracker.router,   prefix="/api/v1")
 async def root():
     return {"message": "Stevia Care API is running!", "version": "1.0.0"}
 
-# ── STEVIA CARE v11 ──────────────────────────────────────────────────────
+# ── STEVIA CARE DATA SYNC ────────────────────────────────────────────────
 import data_routes
 
 @app.on_event("startup")
-async def _stevia_data_startup():
-    from app.database import get_db as _gdb
-    data_routes.set_db(_gdb())
-    print("[Stevia] Health data routes connected ✅")
+async def _stevia_startup():
+    from app.database import get_db as _get_db
+    data_routes.set_db(_get_db())
+    print("[Stevia Care] Health data routes ready ✅")
 
 app.include_router(data_routes.router)
-# ─────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────────────
