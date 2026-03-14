@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import connect_db, close_db, get_db
 from app.routes import auth, ai, family, reminders, tracker
 import os
+import data_routes
 
 app = FastAPI(title="Stevia Care API", version="1.0.0")
 
@@ -33,19 +34,8 @@ app.include_router(reminders.router, prefix="/api/v1")
 app.include_router(tracker.router,   prefix="/api/v1")
 
 # Health data sync routes (family members, reminders, lab reports, etc.)
+app.include_router(data_routes.router)
 
 @app.get("/")
 async def root():
     return {"message": "Stevia Care API is running!", "version": "1.0.0"}
-
-# ── STEVIA CARE DATA SYNC ────────────────────────────────────────────────
-import data_routes
-
-@app.on_event("startup")
-async def _stevia_startup():
-    from app.database import get_db as _get_db
-    data_routes.set_db(_get_db())
-    print("[Stevia Care] Health data routes ready ✅")
-
-app.include_router(data_routes.router)
-# ────────────────────────────────────────────────────────────────────────
