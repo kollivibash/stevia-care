@@ -49,3 +49,5 @@ async def _stevia_data_startup():
 
 app.include_router(data_routes.router)
 # ─────────────────────────────────────────────────────────────────────────
+import pdf_routes
+app.include_router(pdf_routes.router)
