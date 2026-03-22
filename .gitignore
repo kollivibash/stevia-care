@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+.expo/
+
+# Build output
+dist/
+web-build/
+.expo-shared/
+
+# Environment & secrets
+src/constants/config.js
+.env
+.env.*
+
+# System
+.DS_Store
+*.log
+npm-debug.log*
+
+# EAS
+.easignore
