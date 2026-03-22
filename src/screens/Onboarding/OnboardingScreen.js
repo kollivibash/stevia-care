@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore } from '../../store/authStore';
 import * as SecureStore from 'expo-secure-store';
 
 const { width, height } = Dimensions.get('window');
@@ -13,7 +12,7 @@ const { width, height } = Dimensions.get('window');
 const SLIDES = [
   {
     id: '1',
-    title: 'Your Family\'s\nHealth Guardian',
+    title: "Your Family's\nHealth Guardian",
     subtitle: 'Track health for your entire family — medicines, reports, and cycles all in one place.',
     icon: '🏥',
     colors: ['#064E3B', '#065F46', '#16A34A'],
@@ -32,7 +31,7 @@ const SLIDES = [
     title: 'Never Miss\nA Medicine',
     subtitle: 'Smart reminders ensure you and your family never miss a dose.',
     icon: '💊',
-    colors: ['#92400E', '#D97706', '#FBBF24'],
+    colors: ['#7C2D12', '#C2410C', '#EA580C'],
     features: ['Smart medicine reminders', 'Adherence tracking', 'Prescription scanner'],
   },
   {
@@ -40,31 +39,28 @@ const SLIDES = [
     title: 'Complete\nWellness Tracking',
     subtitle: 'Monitor vitals, BMI, period cycles and more. Your health journey, beautifully visualized.',
     icon: '📊',
-    colors: ['#065F46', '#059669', '#34D399'],
+    colors: ['#1E1B4B', '#3730A3', '#4F46E5'],
     features: ['BMI & vitals tracker', 'Period cycle tracking', 'Health score & trends'],
   },
 ];
 
-export default function OnboardingScreen() {
+export default function OnboardingScreen({ onDone }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
   const scrollX = useRef(new Animated.Value(0)).current;
-  const { demoLogin } = useAuthStore();
 
   const finishOnboarding = async () => {
     try {
       await SecureStore.setItemAsync('onboarding_done', 'true');
-    } catch (e) {
-      console.log('SecureStore error:', e);
-    }
-    demoLogin();
+    } catch (e) {}
+    onDone && onDone();
   };
 
   const handleNext = () => {
-    if (currentIndex < SLIDES.length - 1) {
-      const nextIndex = currentIndex + 1;
-      flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
-      setCurrentIndex(nextIndex);
+    const next = currentIndex + 1;
+    if (next < SLIDES.length) {
+      flatListRef.current?.scrollToIndex({ index: next, animated: true });
+      setCurrentIndex(next);
     }
   };
 
@@ -79,18 +75,18 @@ export default function OnboardingScreen() {
         data={SLIDES}
         horizontal
         pagingEnabled
+        scrollEnabled
         showsHorizontalScrollIndicator={false}
-        scrollEnabled={true}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
           { useNativeDriver: false }
         )}
         onMomentumScrollEnd={e => {
-          const index = Math.round(e.nativeEvent.contentOffset.x / width);
-          setCurrentIndex(index);
+          const idx = Math.round(e.nativeEvent.contentOffset.x / width);
+          setCurrentIndex(idx);
         }}
         keyExtractor={item => item.id}
-        renderItem={({ item, index }) => (
+        renderItem={({ item }) => (
           <LinearGradient
             colors={item.colors}
             style={styles.slide}
@@ -99,29 +95,11 @@ export default function OnboardingScreen() {
           >
             <View style={styles.orb1} />
             <View style={styles.orb2} />
-
-            {/* Skip button */}
-            <TouchableOpacity
-              style={styles.skipBtn}
-              onPress={finishOnboarding}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <Text style={styles.skipText}>Skip</Text>
-            </TouchableOpacity>
-
-            {/* Icon */}
             <View style={styles.iconWrap}>
               <Text style={styles.icon}>{item.icon}</Text>
             </View>
-
-            {/* Text */}
-            <View style={styles.textWrap}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.subtitle}>{item.subtitle}</Text>
-            </View>
-
-            {/* Features */}
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.subtitle}>{item.subtitle}</Text>
             <View style={styles.features}>
               {item.features.map((f, i) => (
                 <View key={i} style={styles.featurePill}>
@@ -130,77 +108,86 @@ export default function OnboardingScreen() {
                 </View>
               ))}
             </View>
-
-            {/* Bottom */}
-            <View style={styles.bottomCard}>
-              {/* Dots */}
-              <View style={styles.dotsRow}>
-                {SLIDES.map((_, i) => (
-                  <View
-                    key={i}
-                    style={[
-                      styles.dot,
-                      {
-                        width: i === currentIndex ? 24 : 8,
-                        backgroundColor: i === currentIndex ? item.colors[1] : '#CBD5E1',
-                        opacity: i === currentIndex ? 1 : 0.4,
-                      }
-                    ]}
-                  />
-                ))}
-              </View>
-
-              {/* Button */}
-              {isLast ? (
-                <TouchableOpacity
-                  style={[styles.btn, { backgroundColor: item.colors[1] }]}
-                  onPress={finishOnboarding}
-                  activeOpacity={0.85}
-                >
-                  <Text style={styles.btnText}>Get Started 🚀</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={[styles.btn, { backgroundColor: item.colors[1] }]}
-                  onPress={handleNext}
-                  activeOpacity={0.85}
-                >
-                  <Text style={styles.btnText}>Next</Text>
-                  <Ionicons name="arrow-forward" size={18} color="#fff" />
-                </TouchableOpacity>
-              )}
-
-              <Text style={styles.terms}>
-                By continuing you agree to our{' '}
-                <Text style={{ fontWeight: '700' }}>Terms & Privacy Policy</Text>
-              </Text>
-            </View>
           </LinearGradient>
         )}
       />
+
+      {/* Fixed bottom — outside FlatList so buttons always work */}
+      <View style={styles.bottomCard}>
+        <View style={styles.dotsRow}>
+          {SLIDES.map((_, i) => {
+            const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
+            const dotWidth = scrollX.interpolate({
+              inputRange, outputRange: [8, 24, 8], extrapolate: 'clamp',
+            });
+            const opacity = scrollX.interpolate({
+              inputRange, outputRange: [0.3, 1, 0.3], extrapolate: 'clamp',
+            });
+            return (
+              <Animated.View
+                key={i}
+                style={[styles.dot, { width: dotWidth, opacity, backgroundColor: '#16A34A' }]}
+              />
+            );
+          })}
+        </View>
+
+        <View style={styles.btnRow}>
+          <TouchableOpacity
+            onPress={finishOnboarding}
+            style={styles.skipBtn}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.skipText}>Skip</Text>
+          </TouchableOpacity>
+
+          {isLast ? (
+            <TouchableOpacity
+              onPress={finishOnboarding}
+              style={styles.mainBtn}
+              activeOpacity={0.85}
+            >
+              <LinearGradient colors={['#065F46', '#16A34A']} style={styles.mainBtnGrad}>
+                <Text style={styles.mainBtnText}>Get Started 🚀</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={handleNext}
+              style={styles.mainBtn}
+              activeOpacity={0.85}
+            >
+              <LinearGradient colors={['#065F46', '#16A34A']} style={styles.mainBtnGrad}>
+                <Text style={styles.mainBtnText}>Next</Text>
+                <Ionicons name="arrow-forward" size={18} color="#fff" />
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container:   { flex: 1 },
-  slide:       { width, height, paddingTop: 60, paddingHorizontal: 28, overflow: 'hidden' },
-  orb1:        { position: 'absolute', width: 300, height: 300, borderRadius: 150, backgroundColor: 'rgba(255,255,255,0.06)', top: -120, right: -80 },
-  orb2:        { position: 'absolute', width: 200, height: 200, borderRadius: 100, backgroundColor: 'rgba(255,255,255,0.04)', bottom: 200, left: -80 },
-  skipBtn:     { alignSelf: 'flex-end', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 20, paddingHorizontal: 18, paddingVertical: 10, marginBottom: 10 },
-  skipText:    { color: '#fff', fontSize: 14, fontWeight: '700' },
-  iconWrap:    { alignItems: 'center', justifyContent: 'center', marginTop: 20, marginBottom: 28 },
-  icon:        { fontSize: 80 },
-  textWrap:    { marginBottom: 24 },
-  title:       { color: '#fff', fontSize: 34, fontWeight: '900', lineHeight: 42, marginBottom: 12 },
-  subtitle:    { color: 'rgba(255,255,255,0.8)', fontSize: 15, lineHeight: 23 },
-  features:    { gap: 10, marginBottom: 28 },
-  featurePill: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10 },
-  featureText: { color: '#fff', fontSize: 13, fontWeight: '600' },
-  bottomCard:  { backgroundColor: '#fff', borderRadius: 28, padding: 24, gap: 16 },
-  dotsRow:     { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6 },
-  dot:         { height: 8, borderRadius: 4 },
-  btn:         { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 16, paddingVertical: 16 },
-  btnText:     { color: '#fff', fontSize: 16, fontWeight: '800' },
-  terms:       { textAlign: 'center', color: '#94A3B8', fontSize: 11, lineHeight: 16 },
+  container:    { flex: 1, backgroundColor: '#14532D' },
+  slide:        { width, height: height - 180, paddingTop: 60, paddingHorizontal: 28, overflow: 'hidden' },
+  orb1:         { position: 'absolute', width: 300, height: 300, borderRadius: 150, backgroundColor: 'rgba(255,255,255,0.06)', top: -100, right: -80 },
+  orb2:         { position: 'absolute', width: 200, height: 200, borderRadius: 100, backgroundColor: 'rgba(255,255,255,0.04)', bottom: 80, left: -80 },
+  iconWrap:     { alignItems: 'center', marginTop: 20, marginBottom: 24 },
+  icon:         { fontSize: 80 },
+  title:        { color: '#fff', fontSize: 32, fontWeight: '900', lineHeight: 40, marginBottom: 12 },
+  subtitle:     { color: 'rgba(255,255,255,0.8)', fontSize: 15, lineHeight: 23, marginBottom: 28 },
+  features:     { gap: 10 },
+  featurePill:  { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: 'rgba(255,255,255,0.13)', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10 },
+  featureText:  { color: '#fff', fontSize: 13, fontWeight: '600' },
+  bottomCard:   { backgroundColor: '#fff', padding: 24, paddingBottom: 44, gap: 20 },
+  dotsRow:      { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6 },
+  dot:          { height: 8, borderRadius: 4 },
+  btnRow:       { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  skipBtn:      { flex: 1, paddingVertical: 15, borderRadius: 14, borderWidth: 1.5, borderColor: '#E2E8F0', alignItems: 'center' },
+  skipText:     { color: '#64748B', fontWeight: '700', fontSize: 15 },
+  mainBtn:      { flex: 2, borderRadius: 14, overflow: 'hidden' },
+  mainBtnGrad:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 15 },
+  mainBtnText:  { color: '#fff', fontSize: 16, fontWeight: '800' },
 });

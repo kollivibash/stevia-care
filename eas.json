@@ -10,11 +10,18 @@
         "buildType": "apk"
       }
     },
+    "preview-ios": {
+      "channel": "preview",
+      "ios": {
+        "simulator": false,
+        "enterpriseProvisioning": "universal"
+      }
+    },
     "production": {
-      "channel": "production"
+      "channel": "production",
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
-  },
-  "submit": {
-    "production": {}
   }
 }

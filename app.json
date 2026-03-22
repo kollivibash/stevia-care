@@ -27,31 +27,30 @@
       "package": "com.steviacare.app",
       "versionCode": 1,
       "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.VIBRATE",
-        "android.permission.RECORD_AUDIO"
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "VIBRATE"
       ]
     },
     "plugins": [
       "expo-secure-store",
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "Allow Stevia Care to access your photos."
-        }
-      ],
-      [
-        "expo-document-picker",
-        {
-          "iCloudContainerEnvironment": "Production"
-        }
-      ]
+      ["expo-image-picker", {"photosPermission": "Allow Stevia Care to access your photos."}],
+      ["expo-document-picker", {"iCloudContainerEnvironment": "Production"}],
+      "expo-updates"
     ],
+    "updates": {
+      "url": "https://u.expo.dev/YOUR_PROJECT_ID",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "extra": {
       "eas": {
-        "projectId": "5c3b0ef4-e6e5-40ab-8247-04f12db4572c"
+        "projectId": "YOUR_PROJECT_ID"
       }
     }
   }
