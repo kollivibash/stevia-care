@@ -5,7 +5,6 @@ All AI calls go through here — key stays safe on server
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
-from app.routes.auth import get_current_user
 import httpx, os, json
 
 router = APIRouter(prefix="/ai", tags=["AI"])
@@ -110,7 +109,7 @@ async def ping():
 
 
 @router.post("/lab-report")
-async def analyze_lab_report(req: LabReportRequest, current_user=Depends(get_current_user)):
+async def analyze_lab_report(req: LabReportRequest):
     system = """You are MedLens, an expert clinical pathologist AI for Indian patients.
 Analyze lab reports with extreme precision using standard Indian laboratory reference ranges.
 You MUST identify EVERY abnormal value. Respond ONLY in valid JSON, no markdown."""
@@ -129,7 +128,7 @@ Respond ONLY with this JSON:
 
 
 @router.post("/chat")
-async def health_chat(req: ChatRequest, current_user=Depends(get_current_user)):
+async def health_chat(req: ChatRequest):
     lang_inst = f"IMPORTANT: Respond ONLY in {req.language} language." if req.language != "English" else ""
     system = f"""You are Stevia AI, a warm and knowledgeable personal health assistant for Indian families.
 {lang_inst}
@@ -142,7 +141,7 @@ Rules: Be warm and practical. For emergencies say CALL 108. Never stop prescribe
 
 
 @router.post("/symptom-checker")
-async def check_symptoms(req: SymptomRequest, current_user=Depends(get_current_user)):
+async def check_symptoms(req: SymptomRequest):
     system = "You are a medical AI for Indian patients. Help understand symptoms. Never diagnose definitively. Respond ONLY in valid JSON."
     user = f"""Patient symptoms: {", ".join(req.symptoms)}
 Age: {req.age}, Gender: {req.gender}, Conditions: {req.existingConditions or "none"}
@@ -155,7 +154,7 @@ Respond ONLY with:
 
 
 @router.post("/parse-prescription")
-async def parse_prescription(req: PrescriptionRequest, current_user=Depends(get_current_user)):
+async def parse_prescription(req: PrescriptionRequest):
     system = "You are a precise prescription parser for Indian medicines. Respond ONLY in valid JSON."
     user = f"""Parse this prescription. Meal times: Breakfast {req.breakfastTime}, Lunch {req.lunchTime}, Dinner {req.dinnerTime}.
 
@@ -170,7 +169,7 @@ Respond ONLY with:
 
 
 @router.post("/drug-interactions")
-async def check_drug_interactions(req: DrugInteractionRequest, current_user=Depends(get_current_user)):
+async def check_drug_interactions(req: DrugInteractionRequest):
     system = "You are a clinical pharmacist. Check drug interactions including Ayurvedic herbs. Respond ONLY in valid JSON."
     user = f"""Check interactions between: {", ".join(req.medicines)}
 
@@ -182,7 +181,7 @@ Respond ONLY with:
 
 
 @router.post("/family-health")
-async def analyze_family_health(req: FamilyHealthRequest, current_user=Depends(get_current_user)):
+async def analyze_family_health(req: FamilyHealthRequest):
     system = "You are a family health analyst for Indian families. Respond ONLY in valid JSON."
     user = f"""Analyze: {json.dumps(req.familyData)}
 Respond ONLY with:
