@@ -8,20 +8,13 @@
       "channel": "preview",
       "android": {
         "buildType": "apk"
-      }
-    },
-    "preview-ios": {
-      "channel": "preview",
-      "ios": {
-        "simulator": false,
-        "enterpriseProvisioning": "universal"
+      },
+      "env": {
+        "EXPO_NO_UPDATES": "1"
       }
     },
     "production": {
-      "channel": "production",
-      "android": {
-        "buildType": "app-bundle"
-      }
+      "channel": "production"
     }
   }
 }
