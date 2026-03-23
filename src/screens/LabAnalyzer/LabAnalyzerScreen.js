@@ -64,14 +64,12 @@ export default function LabAnalyzerScreen({ navigation }) {
         const file = result.assets[0];
         const fileName = file.name || '';
 
-        // Plain text file — read directly
+        // Plain text file — read directly via fetch
         if (fileName.endsWith('.txt')) {
           setLoading(true);
           try {
-            const FileSystem = require('expo-file-system');
-            const content = await FileSystem.readAsStringAsync(file.uri, {
-              encoding: FileSystem.EncodingType.UTF8,
-            });
+            const res = await fetch(file.uri);
+            const content = await res.text();
             if (content?.trim().length > 10) {
               await handleAnalyze(content, 'file');
               return;

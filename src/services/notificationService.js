@@ -1,8 +1,7 @@
-// Notification service — stubbed for Expo Go compatibility
+// Stevia Care — Notification Service (stub for Expo Go)
 // Real notifications require EAS dev build
-// These stubs prevent crashes during development
-
-export async function scheduleNotification() { return null; }
-export async function cancelNotification() { return; }
-export async function requestPermissions() { return 'denied'; }
-export async function registerToken() { return null; }
+export const scheduleMedicineReminder = async () => null;
+export const cancelReminder = async () => null;
+export const cancelAllReminders = async () => null;
+export const scheduleAllMedicineReminders = async () => 0;
+export const registerForPushNotifications = async () => null;
