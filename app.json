@@ -52,20 +52,13 @@
         {
           "iCloudContainerEnvironment": "Production"
         }
-      ],
-      "expo-updates"
+      ]
     ],
     "extra": {
       "eas": {
         "projectId": "5c3b0ef4-e6e5-40ab-8247-04f12db4572c"
       }
     },
-    "owner": "kollivibhash",
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/5c3b0ef4-e6e5-40ab-8247-04f12db4572c"
-    }
+    "owner": "kollivibhash"
   }
 }
