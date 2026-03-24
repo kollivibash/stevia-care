@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 import random
 import httpx
-from app.database import db
+from app.database import get_db
 from jose import jwt
 import os
 
@@ -25,6 +25,7 @@ def create_token(user_id: str, phone: str):
 
 @router.post("/send-otp")
 async def send_otp(body: SendOTPRequest):
+    db = get_db()
     phone = body.phone.strip().replace("+91", "").replace(" ", "")
     if len(phone) != 10 or not phone.isdigit():
         raise HTTPException(400, "Invalid phone number. Send 10 digit Indian number.")
@@ -68,6 +69,7 @@ async def send_otp(body: SendOTPRequest):
 
 @router.post("/verify-otp")
 async def verify_otp(body: VerifyOTPRequest):
+    db = get_db()
     phone = body.phone.strip().replace("+91", "").replace(" ", "")
     otp = body.otp.strip()
 
