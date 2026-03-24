@@ -62,17 +62,51 @@ export default function TrackerScreen({ navigation }) {
   const [editingId,  setEditingId]  = useState(null);
   const [form,       setForm]       = useState(BLANK);
 
-  // Cycle stats
-  const avgLen = periodCycles.length > 0
-    ? Math.round(periodCycles.reduce((s, c) => s + (c.cycle_length || 28), 0) / periodCycles.length)
+  // ── Cycle stats — computed from actual period history ──────────────────
+  // Sort cycles newest first
+  const sortedCycles = [...periodCycles].sort(
+    (a, b) => parseISO(b.period_start) - parseISO(a.period_start)
+  );
+  const lastCycle = sortedCycles[0];
+
+  // Calculate real cycle lengths from consecutive period_start dates
+  const realCycleLengths = [];
+  for (let i = 0; i < sortedCycles.length - 1; i++) {
+    const len = differenceInDays(
+      parseISO(sortedCycles[i].period_start),
+      parseISO(sortedCycles[i + 1].period_start)
+    );
+    if (len >= 20 && len <= 45) realCycleLengths.push(len); // only valid lengths
+  }
+
+  const avgLen = realCycleLengths.length > 0
+    ? Math.round(realCycleLengths.reduce((s, l) => s + l, 0) / realCycleLengths.length)
     : 28;
-  const lastCycle    = periodCycles[0];
-  const nextPeriod   = lastCycle ? addDays(parseISO(lastCycle.period_start), avgLen) : addDays(today, 14);
-  const daysUntil    = differenceInDays(nextPeriod, today);
-  const ovulationDay = addDays(nextPeriod, -14);
-  const fertileStart = addDays(ovulationDay, -5);
-  const fertileEnd   = addDays(ovulationDay, 1);
-  const cycleDay     = lastCycle ? Math.max(1, differenceInDays(today, parseISO(lastCycle.period_start)) + 1) : 0;
+
+  // Is cycle irregular? (std deviation > 4 days across 2+ cycles)
+  const isIrregular = realCycleLengths.length >= 2 && (() => {
+    const variance = realCycleLengths.reduce((s, l) => s + Math.pow(l - avgLen, 2), 0) / realCycleLengths.length;
+    return Math.sqrt(variance) > 4;
+  })();
+
+  // Next period = last period start + avg cycle length
+  const nextPeriod = lastCycle
+    ? addDays(parseISO(lastCycle.period_start), avgLen)
+    : addDays(today, 14);
+  const daysUntil = differenceInDays(nextPeriod, today);
+
+  // Ovulation = last period start + (avgLen - 14)  ← luteal phase is fixed ~14 days
+  const ovulationDay = lastCycle
+    ? addDays(parseISO(lastCycle.period_start), Math.max(avgLen - 14, 10))
+    : addDays(today, 14);
+
+  // Fertile window: wider if irregular cycles
+  const fertileStart = addDays(ovulationDay, isIrregular ? -7 : -5);
+  const fertileEnd   = addDays(ovulationDay, isIrregular ? 3  : 1);
+
+  const cycleDay = lastCycle
+    ? Math.max(1, differenceInDays(today, parseISO(lastCycle.period_start)) + 1)
+    : 0;
 
   // Phase
   const getPhase = () => {

@@ -8,11 +8,34 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../../store/authStore';
 
+const FIREBASE_API_KEY = 'AIzaSyALp0aZr4aaueA4HLNyuC7uiBSLfVaciVo';
+
+async function sendPasswordReset(email) {
+  try {
+    const res = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${FIREBASE_API_KEY}`,
+      {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ requestType: 'PASSWORD_RESET', email }),
+      }
+    );
+    const data = await res.json();
+    if (data.error) return { success: false, error: data.error.message };
+    return { success: true };
+  } catch {
+    return { success: false, error: 'Network error. Please try again.' };
+  }
+}
+
 export default function LoginScreen({ navigation }) {
-  const [email,    setEmail]    = useState('');
-  const [password, setPassword] = useState('');
-  const [showPass, setShowPass] = useState(false);
-  const [loading,  setLoading]  = useState(false);
+  const [email,      setEmail]      = useState('');
+  const [password,   setPassword]   = useState('');
+  const [showPass,   setShowPass]   = useState(false);
+  const [loading,    setLoading]    = useState(false);
+  const [fpMode,     setFpMode]     = useState(false);   // forgot-password mode
+  const [fpEmail,    setFpEmail]    = useState('');
+  const [fpLoading,  setFpLoading]  = useState(false);
   const { login, demoLogin, error, clearError } = useAuthStore();
   const shakeAnim = useRef(new Animated.Value(0)).current;
 
@@ -40,6 +63,25 @@ export default function LoginScreen({ navigation }) {
     demoLogin();
   };
 
+  const handleForgotPassword = async () => {
+    if (!fpEmail.trim()) {
+      Alert.alert('Enter Email', 'Please enter your registered email address.');
+      return;
+    }
+    setFpLoading(true);
+    const result = await sendPasswordReset(fpEmail.trim());
+    setFpLoading(false);
+    if (result.success) {
+      Alert.alert(
+        '✅ Email Sent',
+        `A password reset link has been sent to ${fpEmail.trim()}. Check your inbox (and spam folder).`,
+        [{ text: 'OK', onPress: () => { setFpMode(false); setFpEmail(''); } }]
+      );
+    } else {
+      Alert.alert('Failed', result.error || 'Could not send reset email. Check the address and try again.');
+    }
+  };
+
   // Safe error display — always convert to string
   const errorMsg = error
     ? (typeof error === 'string' ? error : 'Login failed. Please try again.')
@@ -63,83 +105,118 @@ export default function LoginScreen({ navigation }) {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <Animated.View style={[styles.card, { transform: [{ translateX: shakeAnim }] }]}>
-            <Text style={styles.cardTitle}>Welcome back 👋</Text>
-            <Text style={styles.cardSub}>Sign in to your Stevia Care account</Text>
 
-            {/* ERROR BOX — safe string display */}
-            {errorMsg ? (
-              <View style={styles.errorBox}>
-                <Ionicons name="alert-circle-outline" size={16} color="#EF4444" />
-                <Text style={styles.errorText}>{errorMsg}</Text>
-              </View>
-            ) : null}
+            {/* ── FORGOT PASSWORD MODE ── */}
+            {fpMode ? (
+              <>
+                <TouchableOpacity onPress={() => { setFpMode(false); setFpEmail(''); }} style={{ marginBottom: 16 }}>
+                  <Text style={{ color: '#16A34A', fontWeight: '700', fontSize: 13 }}>← Back to Sign In</Text>
+                </TouchableOpacity>
+                <Text style={styles.cardTitle}>Reset Password 🔑</Text>
+                <Text style={styles.cardSub}>Enter your email — we'll send a reset link</Text>
 
-            <Text style={styles.label}>Email Address</Text>
-            <View style={styles.inputWrap}>
-              <Ionicons name="mail-outline" size={18} color="#94A3B8" />
-              <TextInput
-                style={styles.input}
-                placeholder="you@example.com"
-                placeholderTextColor="#CBD5E1"
-                value={email}
-                onChangeText={(t) => { clearError(); setEmail(t); }}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
+                <Text style={styles.label}>Email Address</Text>
+                <View style={styles.inputWrap}>
+                  <Ionicons name="mail-outline" size={18} color="#94A3B8" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="you@example.com"
+                    placeholderTextColor="#CBD5E1"
+                    value={fpEmail}
+                    onChangeText={setFpEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoFocus
+                  />
+                </View>
 
-            <Text style={styles.label}>Password</Text>
-            <View style={styles.inputWrap}>
-              <Ionicons name="lock-closed-outline" size={18} color="#94A3B8" />
-              <TextInput
-                style={styles.input}
-                placeholder="••••••••"
-                placeholderTextColor="#CBD5E1"
-                value={password}
-                onChangeText={(t) => { clearError(); setPassword(t); }}
-                secureTextEntry={!showPass}
-              />
-              <TouchableOpacity onPress={() => setShowPass(!showPass)}>
-                <Ionicons name={showPass ? 'eye-off-outline' : 'eye-outline'} size={18} color="#94A3B8" />
-              </TouchableOpacity>
-            </View>
+                <TouchableOpacity onPress={handleForgotPassword} disabled={fpLoading} activeOpacity={0.88} style={{ marginTop: 20 }}>
+                  <LinearGradient colors={['#14532D', '#16A34A']} style={styles.loginBtn}>
+                    {fpLoading
+                      ? <Text style={styles.loginBtnText}>Sending...</Text>
+                      : <><Ionicons name="send" size={18} color="#fff" /><Text style={styles.loginBtnText}>Send Reset Link</Text></>
+                    }
+                  </LinearGradient>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Text style={styles.cardTitle}>Welcome back 👋</Text>
+                <Text style={styles.cardSub}>Sign in to your Stevia Care account</Text>
 
-            {/* Forgot password — shows alert instead of navigating to missing screen */}
-            <TouchableOpacity
-              onPress={() => Alert.alert(
-                '🔑 Reset Password',
-                'To reset your password, please contact support at support@steviacare.in\n\nOr use the Demo Account to explore the app.',
-                [{ text: 'OK' }]
-              )}
-              style={styles.forgotRow}
-            >
-              <Text style={styles.forgotText}>Forgot password?</Text>
-            </TouchableOpacity>
+                {/* ERROR BOX */}
+                {errorMsg ? (
+                  <View style={styles.errorBox}>
+                    <Ionicons name="alert-circle-outline" size={16} color="#EF4444" />
+                    <Text style={styles.errorText}>{errorMsg}</Text>
+                  </View>
+                ) : null}
 
-            {/* SIGN IN BUTTON */}
-            <TouchableOpacity onPress={handleLogin} disabled={loading} activeOpacity={0.88} style={{ marginTop: 8 }}>
-              <LinearGradient colors={['#14532D', '#16A34A']} style={styles.loginBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
-                {loading
-                  ? <Text style={styles.loginBtnText}>Signing in...</Text>
-                  : <><Ionicons name="log-in-outline" size={18} color="#fff" /><Text style={styles.loginBtnText}>Sign In</Text></>
-                }
-              </LinearGradient>
-            </TouchableOpacity>
+                <Text style={styles.label}>Email Address</Text>
+                <View style={styles.inputWrap}>
+                  <Ionicons name="mail-outline" size={18} color="#94A3B8" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="you@example.com"
+                    placeholderTextColor="#CBD5E1"
+                    value={email}
+                    onChangeText={(t) => { clearError(); setEmail(t); }}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </View>
 
-            <View style={styles.divider}>
-              <View style={styles.divLine} /><Text style={styles.divText}>or</Text><View style={styles.divLine} />
-            </View>
+                <Text style={styles.label}>Password</Text>
+                <View style={styles.inputWrap}>
+                  <Ionicons name="lock-closed-outline" size={18} color="#94A3B8" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor="#CBD5E1"
+                    value={password}
+                    onChangeText={(t) => { clearError(); setPassword(t); }}
+                    secureTextEntry={!showPass}
+                  />
+                  <TouchableOpacity onPress={() => setShowPass(!showPass)}>
+                    <Ionicons name={showPass ? 'eye-off-outline' : 'eye-outline'} size={18} color="#94A3B8" />
+                  </TouchableOpacity>
+                </View>
 
-            {/* DEMO BUTTON */}
-            <TouchableOpacity onPress={handleDemo} style={styles.demoBtn} activeOpacity={0.85}>
-              <Ionicons name="play-circle-outline" size={18} color="#16A34A" />
-              <Text style={styles.demoBtnText}>Continue with Demo Account</Text>
-            </TouchableOpacity>
+                {/* Forgot password — triggers real Firebase email reset */}
+                <TouchableOpacity
+                  onPress={() => { setFpMode(true); setFpEmail(email); }}
+                  style={styles.forgotRow}
+                >
+                  <Text style={styles.forgotText}>Forgot password?</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.registerRow}>
-              <Text style={styles.registerText}>Don't have an account? <Text style={styles.registerLink}>Create one →</Text></Text>
-            </TouchableOpacity>
+                {/* SIGN IN BUTTON */}
+                <TouchableOpacity onPress={handleLogin} disabled={loading} activeOpacity={0.88} style={{ marginTop: 8 }}>
+                  <LinearGradient colors={['#14532D', '#16A34A']} style={styles.loginBtn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
+                    {loading
+                      ? <Text style={styles.loginBtnText}>Signing in...</Text>
+                      : <><Ionicons name="log-in-outline" size={18} color="#fff" /><Text style={styles.loginBtnText}>Sign In</Text></>
+                    }
+                  </LinearGradient>
+                </TouchableOpacity>
+
+                <View style={styles.divider}>
+                  <View style={styles.divLine} /><Text style={styles.divText}>or</Text><View style={styles.divLine} />
+                </View>
+
+                {/* DEMO BUTTON */}
+                <TouchableOpacity onPress={handleDemo} style={styles.demoBtn} activeOpacity={0.85}>
+                  <Ionicons name="play-circle-outline" size={18} color="#16A34A" />
+                  <Text style={styles.demoBtnText}>Continue with Demo Account</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.registerRow}>
+                  <Text style={styles.registerText}>Don't have an account? <Text style={styles.registerLink}>Create one →</Text></Text>
+                </TouchableOpacity>
+              </>
+            )}
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>

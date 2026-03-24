@@ -13,7 +13,6 @@ export default function RootNavigator() {
   const { initialize: initTheme } = useThemeStore();
   const { loadFromBackend, clearData } = useHealthStore();
   const [onboardingDone, setOnboardingDone] = useState(null);
-  const [dataLoading,    setDataLoading]    = useState(false);
 
   useEffect(() => {
     initialize();
@@ -23,17 +22,16 @@ export default function RootNavigator() {
     });
   }, []);
 
-  // Load health data when authenticated + token ready
+  // Load health data in background — do NOT block app launch
   useEffect(() => {
     if (isAuthenticated && token && token !== 'demo_token') {
-      setDataLoading(true);
-      loadFromBackend(token).finally(() => setDataLoading(false));
+      loadFromBackend(token); // background load, no spinner
     } else if (!isAuthenticated) {
       clearData();
     }
   }, [isAuthenticated, token]);
 
-  if (isLoading || onboardingDone === null || dataLoading) {
+  if (isLoading || onboardingDone === null) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F0FDF4' }}>
         <ActivityIndicator size="large" color="#16A34A" />
