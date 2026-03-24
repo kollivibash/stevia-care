@@ -5,6 +5,7 @@ from app.routes import auth, ai, family, reminders, tracker
 import data_routes
 import pdf_routes
 import ai_routes
+from otp_routes import router as otp_router
 
 app = FastAPI(title="Stevia Care API", version="1.0.0")
 
@@ -42,3 +43,4 @@ app.include_router(tracker.router,   prefix="/api/v1")
 app.include_router(data_routes.router)
 app.include_router(pdf_routes.router)
 app.include_router(ai_routes.router,  prefix="/api/v1")
+app.include_router(otp_router)
