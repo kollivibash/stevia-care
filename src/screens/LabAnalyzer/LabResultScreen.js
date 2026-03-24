@@ -146,7 +146,7 @@ export default function LabResultScreen({ navigation, route }) {
                           <View style={styles.refRow}>
                             <Ionicons name="analytics-outline" size={13} color={T.textMuted} />
                             <Text style={[styles.refText, { color:T.textMuted }]}>
-                              Reference: <Text style={{ fontWeight:'700', color:T.textSub }}>{param.reference_range}</Text>
+                              Reference: <Text style={{ fontFamily:'Nunito_700Bold', color:T.textSub }}>{param.reference_range}</Text>
                             </Text>
                           </View>
                           {param.deviation && (
@@ -198,7 +198,7 @@ export default function LabResultScreen({ navigation, route }) {
                 {result.diet_advice.map((d, i) => (
                   <View key={i} style={styles.adviceRow}>
                     <View style={[styles.adviceNum, { backgroundColor:'#DCFCE7' }]}>
-                      <Text style={{ color:'#14532D', fontSize:11, fontWeight:'900' }}>{i+1}</Text>
+                      <Text style={{ color:'#14532D', fontSize:11, fontFamily:'Nunito_900Black' }}>{i+1}</Text>
                     </View>
                     <Text style={[styles.adviceText, { color:T.textSub }]}>{d}</Text>
                   </View>
@@ -291,42 +291,42 @@ export default function LabResultScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   header:         { flexDirection:'row', alignItems:'center', gap:12, paddingHorizontal:16, paddingTop:12, paddingBottom:20 },
   backBtn:        { width:36, height:36, borderRadius:18, backgroundColor:'rgba(255,255,255,0.25)', alignItems:'center', justifyContent:'center' },
-  hTitle:         { color:'#fff', fontSize:18, fontWeight:'900' },
+  hTitle:         { color:'#fff', fontSize:18, fontFamily:'Nunito_900Black' },
   hSub:           { color:'rgba(255,255,255,0.75)', fontSize:11, marginTop:2 },
   overallBadge:   { backgroundColor:'rgba(255,255,255,0.25)', paddingHorizontal:12, paddingVertical:6, borderRadius:20 },
-  overallText:    { color:'#fff', fontSize:12, fontWeight:'900' },
+  overallText:    { color:'#fff', fontSize:12, fontFamily:'Nunito_900Black' },
   statsRow:       { flexDirection:'row', paddingVertical:14, marginBottom:2 },
   statItem:       { flex:1, alignItems:'center' },
-  statNum:        { fontSize:22, fontWeight:'900' },
+  statNum:        { fontSize:22, fontFamily:'Nunito_900Black' },
   statLabel:      { fontSize:10, color:'#888', marginTop:2 },
   statDivider:    { width:0.5, height:36, alignSelf:'center' },
   tabRow:         { flexDirection:'row', borderBottomWidth:0.5, marginBottom:4 },
   tab:            { flex:1, flexDirection:'row', alignItems:'center', justifyContent:'center', gap:6, paddingVertical:12 },
   tabActive:      { borderBottomWidth:2, borderBottomColor:'#16A34A' },
-  tabLabel:       { fontSize:12, fontWeight:'700' },
+  tabLabel:       { fontSize:12, fontFamily:'Nunito_700Bold' },
   card:           { borderRadius:16, padding:16, marginBottom:12 },
   cardHeader:     { flexDirection:'row', alignItems:'center', gap:8, marginBottom:12 },
-  cardTitle:      { fontSize:14, fontWeight:'800' },
+  cardTitle:      { fontSize:14, fontFamily:'Nunito_800ExtraBold' },
   summaryText:    { fontSize:13, lineHeight:22 },
   alertCard:      { borderRadius:14, padding:14, borderWidth:1.5, marginBottom:12 },
   alertHeader:    { flexDirection:'row', alignItems:'center', gap:8, marginBottom:10 },
-  alertTitle:     { fontSize:13, fontWeight:'800', color:'#DC2626' },
+  alertTitle:     { fontSize:13, fontFamily:'Nunito_800ExtraBold', color:'#DC2626' },
   alertText:      { fontSize:12, color:'#991B1B', lineHeight:20, paddingLeft:4 },
-  secTitle:       { fontSize:14, fontWeight:'800', marginBottom:10 },
+  secTitle:       { fontSize:14, fontFamily:'Nunito_800ExtraBold', marginBottom:10 },
   paramCard:      { borderRadius:14, padding:14, marginBottom:8, backgroundColor:'transparent' },
   paramRow:       { flexDirection:'row', alignItems:'center', gap:12 },
   statusBar:      { width:4, height:44, borderRadius:2, flexShrink:0 },
-  paramName:      { fontSize:13, fontWeight:'700' },
-  paramValue:     { fontSize:12, fontWeight:'600', marginTop:2 },
+  paramName:      { fontSize:13, fontFamily:'Nunito_700Bold' },
+  paramValue:     { fontSize:12, fontFamily:'Nunito_600SemiBold', marginTop:2 },
   paramRight:     { alignItems:'flex-end', gap:4 },
   statusChip:     { paddingHorizontal:10, paddingVertical:4, borderRadius:10 },
-  statusChipText: { fontSize:11, fontWeight:'800' },
+  statusChipText: { fontSize:11, fontFamily:'Nunito_800ExtraBold' },
   paramExpanded:  { marginTop:12, paddingTop:12, borderTopWidth:0.5 },
   refRow:         { flexDirection:'row', gap:6, alignItems:'center', marginBottom:5 },
   refText:        { fontSize:12, flex:1 },
   explanText:     { fontSize:13, lineHeight:20, marginTop:4, marginBottom:8 },
   actionBox:      { flexDirection:'row', gap:8, alignItems:'flex-start', padding:10, borderRadius:10, marginTop:4 },
-  actionText:     { fontSize:12, flex:1, lineHeight:18, fontWeight:'600' },
+  actionText:     { fontSize:12, flex:1, lineHeight:18, fontFamily:'Nunito_600SemiBold' },
   findingRow:     { flexDirection:'row', alignItems:'flex-start', gap:10, marginBottom:8 },
   bullet:         { width:6, height:6, borderRadius:3, marginTop:6, flexShrink:0 },
   findingText:    { flex:1, fontSize:13, lineHeight:20 },
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
   adviceNum:      { width:22, height:22, borderRadius:11, alignItems:'center', justifyContent:'center', flexShrink:0 },
   adviceText:     { flex:1, fontSize:13, lineHeight:20 },
   docRow:         { borderRadius:10, padding:10, borderWidth:1, marginBottom:8 },
-  docParam:       { fontSize:13, fontWeight:'700', color:'#DC2626' },
+  docParam:       { fontSize:13, fontFamily:'Nunito_700Bold', color:'#DC2626' },
   docValue:       { fontSize:12, color:'#7F1D1D', marginTop:2 },
   docRef:         { fontSize:11, color:'#9CA3AF', marginTop:2 },
   disclaimerText: { fontSize:11, lineHeight:18, fontStyle:'italic', flex:1, marginTop:6 },

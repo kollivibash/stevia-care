@@ -156,7 +156,7 @@ export default function HandwrittenRxScreen({ navigation }) {
             <Image source={{ uri:image }} style={styles.rxImage} resizeMode="contain" />
             <TouchableOpacity onPress={() => pickImage(true)} style={styles.retakeBtn}>
               <Ionicons name="refresh" size={16} color="#16A34A" />
-              <Text style={{ color:'#16A34A', fontSize:13, fontWeight:'700' }}>Retake</Text>
+              <Text style={{ color:'#16A34A', fontSize:13, fontFamily:'Nunito_700Bold' }}>Retake</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -165,7 +165,7 @@ export default function HandwrittenRxScreen({ navigation }) {
         {loading && (
           <View style={[styles.loadCard, { backgroundColor:T.card }]}>
             <ActivityIndicator size="large" color="#16A34A" />
-            <Text style={[{ fontSize:14, marginTop:12, fontWeight:'600' }, { color:T.text }]}>Reading prescription...</Text>
+            <Text style={[{ fontSize:14, marginTop:12, fontFamily:'Nunito_600SemiBold' }, { color:T.text }]}>Reading prescription...</Text>
             <Text style={[{ fontSize:12, marginTop:4 }, { color:T.textSub }]}>AI is extracting medicine details</Text>
           </View>
         )}
@@ -179,7 +179,7 @@ export default function HandwrittenRxScreen({ navigation }) {
                 <View style={[styles.confBadge, {
                   backgroundColor: result.confidence==='High'?'#DCFCE7':result.confidence==='Medium'?'#FEF3C7':'#FEE2E2'
                 }]}>
-                  <Text style={{ fontSize:11, fontWeight:'700', color: result.confidence==='High'?'#14532D':result.confidence==='Medium'?'#92400E':'#991B1B' }}>
+                  <Text style={{ fontSize:11, fontFamily:'Nunito_700Bold', color: result.confidence==='High'?'#14532D':result.confidence==='Medium'?'#92400E':'#991B1B' }}>
                     {result.confidence} confidence
                   </Text>
                 </View>
@@ -231,7 +231,7 @@ export default function HandwrittenRxScreen({ navigation }) {
             ) : (
               <View style={[styles.savedCard, { backgroundColor:'#DCFCE7' }]}>
                 <Ionicons name="checkmark-circle" size={24} color="#16A34A" />
-                <Text style={{ color:'#14532D', fontWeight:'700', fontSize:14 }}>Reminders created!</Text>
+                <Text style={{ color:'#14532D', fontFamily:'Nunito_700Bold', fontSize:14 }}>Reminders created!</Text>
               </View>
             )}
           </>
@@ -245,15 +245,15 @@ const styles = StyleSheet.create({
   header:       { padding:20, paddingTop:16, paddingBottom:28 },
   back:         { width:36, height:36, borderRadius:18, backgroundColor:'rgba(255,255,255,0.2)', alignItems:'center', justifyContent:'center', marginBottom:12 },
   hIcon:        { width:56, height:56, borderRadius:28, backgroundColor:'rgba(255,255,255,0.2)', alignItems:'center', justifyContent:'center', marginBottom:10 },
-  hTitle:       { color:'#fff', fontSize:22, fontWeight:'900' },
+  hTitle:       { color:'#fff', fontSize:22, fontFamily:'Nunito_900Black' },
   hSub:         { color:'rgba(255,255,255,0.75)', fontSize:13, marginTop:4 },
   g2:           { flexDirection:'row', gap:12, marginBottom:12 },
   pickBtn:      { flex:1, borderRadius:16, padding:16, alignItems:'center', gap:8 },
   pickIcon:     { width:52, height:52, borderRadius:26, alignItems:'center', justifyContent:'center' },
-  pickLabel:    { fontSize:14, fontWeight:'800' },
+  pickLabel:    { fontSize:14, fontFamily:'Nunito_800ExtraBold' },
   pickSub:      { fontSize:11, textAlign:'center' },
   tipsCard:     { borderRadius:14, padding:14, borderWidth:1, marginBottom:14 },
-  tipsTitle:    { fontSize:13, fontWeight:'700', color:'#1E40AF', marginBottom:8 },
+  tipsTitle:    { fontSize:13, fontFamily:'Nunito_700Bold', color:'#1E40AF', marginBottom:8 },
   tipItem:      { fontSize:12, color:'#1E40AF', paddingVertical:2, lineHeight:18 },
   imageCard:    { borderRadius:16, padding:12, marginBottom:12, alignItems:'center' },
   rxImage:      { width:'100%', height:200, borderRadius:12, marginBottom:8 },
@@ -261,17 +261,17 @@ const styles = StyleSheet.create({
   loadCard:     { borderRadius:16, padding:32, alignItems:'center', marginBottom:12 },
   card:         { borderRadius:16, padding:16, marginBottom:12 },
   resultHeader: { flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:14 },
-  secTitle:     { fontSize:15, fontWeight:'800' },
+  secTitle:     { fontSize:15, fontFamily:'Nunito_800ExtraBold' },
   confBadge:    { paddingHorizontal:10, paddingVertical:4, borderRadius:10 },
   medCard:      { borderRadius:12, padding:12, marginBottom:8 },
   medHeader:    { flexDirection:'row', alignItems:'center', gap:8, marginBottom:8, flexWrap:'wrap' },
-  medName:      { fontSize:14, fontWeight:'800', flex:1 },
-  medDose:      { fontSize:12, fontWeight:'600' },
+  medName:      { fontSize:14, fontFamily:'Nunito_800ExtraBold', flex:1 },
+  medDose:      { fontSize:12, fontFamily:'Nunito_600SemiBold' },
   medDetails:   { flexDirection:'row', gap:6, flexWrap:'wrap' },
   medTag:       { flexDirection:'row', gap:4, alignItems:'center', backgroundColor:'rgba(0,0,0,0.04)', paddingHorizontal:8, paddingVertical:4, borderRadius:8 },
-  medTagText:   { fontSize:11, fontWeight:'600', color:'#555' },
+  medTagText:   { fontSize:11, fontFamily:'Nunito_600SemiBold', color:'#555' },
   notesBox:     { borderRadius:10, padding:10, borderWidth:1, marginTop:8 },
   saveBtn:      { borderRadius:14, paddingVertical:15, flexDirection:'row', alignItems:'center', justifyContent:'center', gap:8, marginBottom:12 },
-  saveBtnText:  { color:'#fff', fontSize:15, fontWeight:'900' },
+  saveBtnText:  { color:'#fff', fontSize:15, fontFamily:'Nunito_900Black' },
   savedCard:    { borderRadius:14, padding:16, flexDirection:'row', alignItems:'center', gap:10, justifyContent:'center', marginBottom:12 },
 });

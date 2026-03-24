@@ -60,7 +60,7 @@ export default function CaregiverScreen({ navigation }) {
             <Text style={styles.codeText}>{linkedCode}</Text>
             <TouchableOpacity onPress={copyCode} style={styles.copyBtn}>
               <Ionicons name="copy-outline" size={18} color="#EA580C" />
-              <Text style={{ color:'#EA580C', fontSize:12, fontWeight:'700' }}>Share</Text>
+              <Text style={{ color:'#EA580C', fontSize:12, fontFamily:'Nunito_700Bold' }}>Share</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -117,7 +117,7 @@ export default function CaregiverScreen({ navigation }) {
                   <Text style={{ fontSize:24 }}>{m.avatar || '👴'}</Text>
                 </View>
                 <View style={{ flex:1 }}>
-                  <Text style={[{ fontSize:14, fontWeight:'700' }, { color:T.text }]}>{m.name}</Text>
+                  <Text style={[{ fontSize:14, fontFamily:'Nunito_700Bold' }, { color:T.text }]}>{m.name}</Text>
                   <Text style={[{ fontSize:12 }, { color:T.textSub }]}>{m.age} years · {m.relation}</Text>
                   {m.conditions?.length > 0 && (
                     <Text style={[{ fontSize:11, marginTop:2 }, { color:'#EF4444' }]}>⚠️ {m.conditions.slice(0,2).join(', ')}</Text>
@@ -125,7 +125,7 @@ export default function CaregiverScreen({ navigation }) {
                 </View>
                 <View style={[styles.statusBadge, { backgroundColor:'#DCFCE7' }]}>
                   <Ionicons name="checkmark-circle" size={14} color="#16A34A" />
-                  <Text style={{ fontSize:10, color:'#14532D', fontWeight:'700' }}>Linked</Text>
+                  <Text style={{ fontSize:10, color:'#14532D', fontFamily:'Nunito_700Bold' }}>Linked</Text>
                 </View>
               </View>
             ))}
@@ -157,22 +157,22 @@ const styles = StyleSheet.create({
   header:      { padding:20, paddingTop:16, paddingBottom:28 },
   back:        { width:36, height:36, borderRadius:18, backgroundColor:'rgba(255,255,255,0.2)', alignItems:'center', justifyContent:'center', marginBottom:12 },
   hIcon:       { width:56, height:56, borderRadius:28, backgroundColor:'rgba(255,255,255,0.2)', alignItems:'center', justifyContent:'center', marginBottom:10 },
-  hTitle:      { color:'#fff', fontSize:22, fontWeight:'900' },
+  hTitle:      { color:'#fff', fontSize:22, fontFamily:'Nunito_900Black' },
   hSub:        { color:'rgba(255,255,255,0.75)', fontSize:13, marginTop:4 },
   card:        { borderRadius:16, padding:16, marginBottom:12 },
-  whatTitle:   { fontSize:14, fontWeight:'800', color:'#C2410C', marginBottom:6 },
+  whatTitle:   { fontSize:14, fontFamily:'Nunito_800ExtraBold', color:'#C2410C', marginBottom:6 },
   whatSub:     { fontSize:13, color:'#9A3412', lineHeight:20 },
-  secTitle:    { fontSize:15, fontWeight:'800', marginBottom:4 },
+  secTitle:    { fontSize:15, fontFamily:'Nunito_800ExtraBold', marginBottom:4 },
   secSub:      { fontSize:12, marginBottom:14 },
   codeBox:     { flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:14, borderRadius:12, borderWidth:1.5, marginBottom:4 },
-  codeText:    { fontSize:18, fontWeight:'900', color:'#EA580C', letterSpacing:2 },
+  codeText:    { fontSize:18, fontFamily:'Nunito_900Black', color:'#EA580C', letterSpacing:2 },
   copyBtn:     { flexDirection:'row', gap:6, alignItems:'center', padding:8 },
   inputWrap:   { flexDirection:'row', alignItems:'center', gap:10, borderRadius:12, paddingHorizontal:12, paddingVertical:11, borderWidth:1.5 },
   input:       { flex:1, fontSize:14, letterSpacing:1 },
   linkBtn:     { borderRadius:14, paddingVertical:14, flexDirection:'row', alignItems:'center', justifyContent:'center', gap:8 },
-  linkBtnText: { color:'#fff', fontSize:15, fontWeight:'900' },
+  linkBtnText: { color:'#fff', fontSize:15, fontFamily:'Nunito_900Black' },
   settingRow:  { flexDirection:'row', alignItems:'center', gap:12, paddingVertical:12, borderBottomWidth:0.5, borderBottomColor:'rgba(0,0,0,0.06)' },
-  settingLabel:{ fontSize:14, fontWeight:'600' },
+  settingLabel:{ fontSize:14, fontFamily:'Nunito_600SemiBold' },
   settingSub:  { fontSize:12, marginTop:1 },
   memberRow:   { flexDirection:'row', alignItems:'center', gap:12, padding:12, borderRadius:12, marginBottom:8 },
   memberAvatar:{ width:44, height:44, borderRadius:22, alignItems:'center', justifyContent:'center', backgroundColor:'#FEF3C7' },

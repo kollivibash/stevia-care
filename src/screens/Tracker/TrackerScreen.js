@@ -327,7 +327,7 @@ export default function TrackerScreen({ navigation }) {
                       { width: DAY_SIZE, height: DAY_SIZE, backgroundColor: bg, borderColor: bc, borderWidth: bw },
                     ]}
                   >
-                    <Text style={[styles.dayNum, { color: tc, fontWeight: isToday || isPeriod ? '900' : '500' }]}>
+                    <Text style={[styles.dayNum, { color: tc, fontFamily: isToday || isPeriod ? 'Nunito_900Black' : 'Nunito_600SemiBold' }]}>
                       {format(day, 'd')}
                     </Text>
                   </TouchableOpacity>

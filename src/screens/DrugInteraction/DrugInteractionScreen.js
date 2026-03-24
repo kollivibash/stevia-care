@@ -62,7 +62,7 @@ export default function DrugInteractionScreen({ navigation }) {
           {meds.length < 8 && (
             <TouchableOpacity onPress={add} style={[styles.addBtn, { borderColor:'#4F46E5' }]}>
               <Ionicons name="add-circle-outline" size={18} color="#4F46E5" />
-              <Text style={{ color:'#4F46E5', fontWeight:'700', fontSize:14 }}>Add another medicine</Text>
+              <Text style={{ color:'#4F46E5', fontFamily:'Nunito_700Bold', fontSize:14 }}>Add another medicine</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity onPress={check} disabled={loading} activeOpacity={0.88} style={{ marginTop:16 }}>
@@ -93,9 +93,9 @@ export default function DrugInteractionScreen({ navigation }) {
                 {result.interactions.map((inter, i) => (
                   <View key={i} style={[styles.interCard, { borderLeftColor:SEV_COLOR[inter.severity]||'#16A34A', backgroundColor:T.bg }]}>
                     <View style={{ flexDirection:'row', justifyContent:'space-between', marginBottom:6 }}>
-                      <Text style={[{ fontSize:13, fontWeight:'700', flex:1 }, { color:T.text }]}>{inter.drug1} + {inter.drug2}</Text>
+                      <Text style={[{ fontSize:13, fontFamily:'Nunito_700Bold', flex:1 }, { color:T.text }]}>{inter.drug1} + {inter.drug2}</Text>
                       <View style={[styles.sevBadge, { backgroundColor:SEV_COLOR[inter.severity]+'20' }]}>
-                        <Text style={[{ fontSize:11, fontWeight:'700' }, { color:SEV_COLOR[inter.severity] }]}>{inter.severity}</Text>
+                        <Text style={[{ fontSize:11, fontFamily:'Nunito_700Bold' }, { color:SEV_COLOR[inter.severity] }]}>{inter.severity}</Text>
                       </View>
                     </View>
                     <Text style={[{ fontSize:12, lineHeight:18, marginBottom:6 }, { color:T.textSub }]}>{inter.effect}</Text>
