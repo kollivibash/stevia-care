@@ -208,5 +208,5 @@ const styles = StyleSheet.create({
   tabIconWrap: { width: 42, height: 32, borderRadius: 12, alignItems: 'center', justifyContent: 'center', position: 'relative' },
   tabIconWrapActive: { backgroundColor: '#16A34A12' },
   activeDot: { position: 'absolute', bottom: -2, width: 4, height: 4, borderRadius: 2, backgroundColor: '#16A34A' },
-  tabLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 0.2 },
+  tabLabel: { fontSize: 10, fontFamily: 'Nunito_700Bold', letterSpacing: 0.2 },
 });
