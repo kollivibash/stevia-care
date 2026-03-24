@@ -345,7 +345,7 @@ export default function TrackerScreen({ navigation }) {
               ].map((l, i) => (
                 <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                   <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: l.color, borderWidth: l.border ? 1.5 : 0, borderColor: l.border || 'transparent' }} />
-                  <Text style={{ fontSize: 10, fontWeight: '600', color: T.textMuted }}>{l.label}</Text>
+                  <Text style={{ fontSize: 10, fontFamily: 'Nunito_600SemiBold', color: T.textMuted }}>{l.label}</Text>
                 </View>
               ))}
             </View>
@@ -366,7 +366,7 @@ export default function TrackerScreen({ navigation }) {
             activeOpacity={0.88}
           >
             <Ionicons name="analytics" size={20} color={PINK} />
-            <Text style={{ color: PINK, fontSize: 13, fontWeight: '800' }}>AI Analysis</Text>
+            <Text style={{ color: PINK, fontSize: 13, fontFamily: 'Nunito_800ExtraBold' }}>AI Analysis</Text>
           </TouchableOpacity>
         </View>
 
@@ -424,7 +424,7 @@ export default function TrackerScreen({ navigation }) {
           <View style={[styles.pcodCard, { backgroundColor: T.card }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 }}>
               <Ionicons name="pulse" size={18} color="#8B5CF6" />
-              <Text style={[{ fontSize: 15, fontWeight: '800' }, { color: T.text }]}>PCOD Awareness</Text>
+              <Text style={[{ fontSize: 15, fontFamily: 'Nunito_800ExtraBold' }, { color: T.text }]}>PCOD Awareness</Text>
             </View>
             {[
               { icon: '⚠️', text: 'Irregular cycles over 35 days apart may indicate PCOD. Consult your gynecologist.' },
@@ -492,7 +492,7 @@ export default function TrackerScreen({ navigation }) {
             {/* END DATE */}
             <Text style={[styles.fieldLabel, { color: T.text }]}>
               End Date{' '}
-              <Text style={{ color: T.textMuted, fontWeight: '500' }}>(optional — leave blank if ongoing)</Text>
+              <Text style={{ color: T.textMuted, fontFamily: 'Nunito_600SemiBold' }}>(optional — leave blank if ongoing)</Text>
             </Text>
             <View style={[styles.inputRow, { backgroundColor: T.inputBg, borderColor: T.border }]}>
               <Ionicons name="calendar-outline" size={18} color={T.textMuted} />
@@ -549,7 +549,7 @@ export default function TrackerScreen({ navigation }) {
                   <Text style={[
                     styles.moodLabel,
                     { color: T.textSub },
-                    form.mood === m.key && { color: PINK, fontWeight: '800' },
+                    form.mood === m.key && { color: PINK, fontFamily: 'Nunito_800ExtraBold' },
                   ]}>
                     {m.label}
                   </Text>
@@ -576,7 +576,7 @@ export default function TrackerScreen({ navigation }) {
                     <Text style={[
                       styles.sympLabel,
                       { color: T.textSub },
-                      active && { color: PINK, fontWeight: '700' },
+                      active && { color: PINK, fontFamily: 'Nunito_700Bold' },
                     ]}>
                       {s.label}
                     </Text>
@@ -604,63 +604,63 @@ export default function TrackerScreen({ navigation }) {
 const styles = StyleSheet.create({
   header:     { paddingHorizontal: 20, paddingBottom: 24, paddingTop: 12, overflow: 'hidden' },
   orb:        { position: 'absolute', width: 250, height: 250, borderRadius: 125, backgroundColor: 'rgba(255,255,255,0.06)', top: -100, right: -70 },
-  eyebrow:    { color: 'rgba(255,255,255,0.55)', fontSize: 10, fontWeight: '800', letterSpacing: 2, marginBottom: 4 },
-  headerTitle: { color: '#fff', fontSize: 28, fontWeight: '900', marginBottom: 16 },
+  eyebrow:    { color: 'rgba(255,255,255,0.55)', fontSize: 10, fontFamily: 'Nunito_800ExtraBold', letterSpacing: 2, marginBottom: 4 },
+  headerTitle: { color: '#fff', fontSize: 28, fontFamily: 'Nunito_900Black', marginBottom: 16 },
 
   phaseCard: { backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 18, padding: 16, flexDirection: 'row', alignItems: 'center', gap: 14, marginBottom: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
-  phaseName:  { color: '#fff', fontSize: 16, fontWeight: '900', marginBottom: 4 },
+  phaseName:  { color: '#fff', fontSize: 16, fontFamily: 'Nunito_900Black', marginBottom: 4 },
   phaseDesc:  { color: 'rgba(255,255,255,0.75)', fontSize: 12, lineHeight: 17 },
-  cycleDay:   { color: 'rgba(255,255,255,0.55)', fontSize: 11, marginTop: 6, fontWeight: '600' },
+  cycleDay:   { color: 'rgba(255,255,255,0.55)', fontSize: 11, marginTop: 6, fontFamily: 'Nunito_600SemiBold' },
   phaseCircle: { width: 60, height: 60, borderRadius: 30, borderWidth: 2.5, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.1)' },
-  phaseNum:   { fontSize: 22, fontWeight: '900' },
-  phaseSub:   { color: 'rgba(255,255,255,0.6)', fontSize: 9, fontWeight: '700' },
+  phaseNum:   { fontSize: 22, fontFamily: 'Nunito_900Black' },
+  phaseSub:   { color: 'rgba(255,255,255,0.6)', fontSize: 9, fontFamily: 'Nunito_700Bold' },
 
   statsRow: { flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)' },
   statBox:  { flex: 1, alignItems: 'center', paddingVertical: 12 },
-  statVal:  { color: '#fff', fontSize: 16, fontWeight: '900' },
-  statLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10, fontWeight: '600', marginTop: 2 },
+  statVal:  { color: '#fff', fontSize: 16, fontFamily: 'Nunito_900Black' },
+  statLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10, fontFamily: 'Nunito_600SemiBold', marginTop: 2 },
 
   fertileCard: { borderRadius: 18, padding: 16, flexDirection: 'row', alignItems: 'center', shadowColor: '#EC4899', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 10, elevation: 3 },
   fertileItem: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
-  fertileLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 0.5, marginBottom: 3 },
-  fertileDate:  { fontSize: 13, fontWeight: '800' },
+  fertileLabel: { fontSize: 10, fontFamily: 'Nunito_700Bold', letterSpacing: 0.5, marginBottom: 3 },
+  fertileDate:  { fontSize: 13, fontFamily: 'Nunito_800ExtraBold' },
 
   calCard:    { borderRadius: 20, padding: 16, shadowColor: '#EC4899', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.08, shadowRadius: 14, elevation: 5 },
   calHeader:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 },
   calNavBtn:  { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
-  calMonth:   { fontSize: 16, fontWeight: '900' },
-  dayName:    { textAlign: 'center', fontSize: 10, fontWeight: '700' },
+  calMonth:   { fontSize: 16, fontFamily: 'Nunito_900Black' },
+  dayName:    { textAlign: 'center', fontSize: 10, fontFamily: 'Nunito_700Bold' },
   dayCell:    { alignItems: 'center', justifyContent: 'center', borderRadius: DAY_SIZE / 2, marginVertical: 2 },
   dayNum:     { fontSize: 12 },
 
   logBtn:     { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 14, paddingVertical: 14 },
-  logBtnText: { color: '#fff', fontSize: 14, fontWeight: '800' },
+  logBtnText: { color: '#fff', fontSize: 14, fontFamily: 'Nunito_800ExtraBold' },
   aiBtn:      { flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16, borderWidth: 2 },
 
-  sectionTitle: { fontSize: 17, fontWeight: '800', marginBottom: 12 },
+  sectionTitle: { fontSize: 17, fontFamily: 'Nunito_800ExtraBold', marginBottom: 12 },
 
   cycleRow: { flexDirection: 'row', alignItems: 'stretch', borderRadius: 16, overflow: 'hidden', marginBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 8, elevation: 2 },
   cycleBar: { width: 4 },
-  cycleDate: { fontSize: 13, fontWeight: '700' },
+  cycleDate: { fontSize: 13, fontFamily: 'Nunito_700Bold' },
   chip: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, borderWidth: 1 },
-  chipText: { fontSize: 11, fontWeight: '700' },
+  chipText: { fontSize: 11, fontFamily: 'Nunito_700Bold' },
   actionBtn: { width: 34, height: 34, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
 
   pcodCard: { borderRadius: 20, padding: 16, marginBottom: 20, shadowColor: '#8B5CF6', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 10, elevation: 3 },
 
   // Modal
   modalHeader:  { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, borderBottomWidth: 1 },
-  modalTitle:   { fontSize: 20, fontWeight: '900' },
-  fieldLabel:   { fontSize: 14, fontWeight: '800', marginBottom: 10, marginTop: 4 },
+  modalTitle:   { fontSize: 20, fontFamily: 'Nunito_900Black' },
+  fieldLabel:   { fontSize: 14, fontFamily: 'Nunito_800ExtraBold', marginBottom: 10, marginTop: 4 },
   inputRow:     { flexDirection: 'row', alignItems: 'center', gap: 10, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 13, borderWidth: 1.5, marginBottom: 18 },
-  input:        { flex: 1, fontSize: 15, fontWeight: '500' },
+  input:        { flex: 1, fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
   flowBtn:      { flex: 1, alignItems: 'center', gap: 6, borderRadius: 14, paddingVertical: 12, borderWidth: 2 },
   flowDot:      { width: 20, height: 20, borderRadius: 10 },
-  flowLabel:    { fontSize: 10, fontWeight: '700' },
+  flowLabel:    { fontSize: 10, fontFamily: 'Nunito_700Bold' },
   moodBtn:      { flex: 1, alignItems: 'center', borderRadius: 14, paddingVertical: 12, gap: 5 },
-  moodLabel:    { fontSize: 9, fontWeight: '600' },
+  moodLabel:    { fontSize: 9, fontFamily: 'Nunito_600SemiBold' },
   sympBtn:      { width: (width - 64) / 4, alignItems: 'center', borderRadius: 14, paddingVertical: 10, gap: 4 },
-  sympLabel:    { fontSize: 9, fontWeight: '600', textAlign: 'center' },
+  sympLabel:    { fontSize: 9, fontFamily: 'Nunito_600SemiBold', textAlign: 'center' },
   saveBtn:      { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, paddingVertical: 16 },
-  saveBtnText:  { color: '#fff', fontSize: 16, fontWeight: '800' },
+  saveBtnText:  { color: '#fff', fontSize: 16, fontFamily: 'Nunito_800ExtraBold' },
 });

@@ -142,7 +142,7 @@ export default function VitalsScreen({ navigation }) {
                   <View style={styles.historyValues}>
                     {VITALS.filter(v => entry[v.key]).slice(0,4).map(v => (
                       <Text key={v.key} style={[styles.historyVal, { color: T.textSub }]}>
-                        <Text style={{ color: v.color, fontWeight: '800' }}>{entry[v.key]}</Text> {v.unit}
+                        <Text style={{ color: v.color, fontFamily: 'Nunito_800ExtraBold' }}>{entry[v.key]}</Text> {v.unit}
                       </Text>
                     ))}
                   </View>
@@ -197,8 +197,8 @@ export default function VitalsScreen({ navigation }) {
               </View>
               {bmi && (
                 <View style={[styles.bmiPreview, { backgroundColor: T.card }]}>
-                  <Text style={[{ fontSize: 13, fontWeight: '700' }, { color: T.textSub }]}>BMI Calculated: </Text>
-                  <Text style={[{ fontSize: 18, fontWeight: '900' }, { color: bmi.col }]}>{bmi.value} — {bmi.cat}</Text>
+                  <Text style={[{ fontSize: 13, fontFamily: 'Nunito_700Bold' }, { color: T.textSub }]}>BMI Calculated: </Text>
+                  <Text style={[{ fontSize: 18, fontFamily: 'Nunito_900Black' }, { color: bmi.col }]}>{bmi.value} — {bmi.cat}</Text>
                 </View>
               )}
               <TouchableOpacity onPress={handleSave} activeOpacity={0.88} style={{ marginTop: 16 }}>
@@ -219,49 +219,49 @@ const styles = StyleSheet.create({
   header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 20 },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  headerTitle: { color: '#fff', fontSize: 24, fontWeight: '900' },
-  headerSub: { color: 'rgba(255,255,255,0.65)', fontSize: 12, marginTop: 2 },
+  headerTitle: { color: '#fff', fontSize: 24, fontFamily: 'Nunito_900Black' },
+  headerSub: { color: 'rgba(255,255,255,0.65)', fontSize: 12, marginTop: 2, fontFamily: 'Nunito_400Regular' },
   logBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
   bmiCard: { marginTop: 14, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 16, padding: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
-  bmiLabel: { color: 'rgba(255,255,255,0.65)', fontSize: 11, fontWeight: '700', marginBottom: 4 },
-  bmiValue: { fontSize: 32, fontWeight: '900' },
-  bmiCat: { fontSize: 13, fontWeight: '700' },
+  bmiLabel: { color: 'rgba(255,255,255,0.65)', fontSize: 11, fontFamily: 'Nunito_700Bold', marginBottom: 4 },
+  bmiValue: { fontSize: 32, fontFamily: 'Nunito_900Black' },
+  bmiCat: { fontSize: 13, fontFamily: 'Nunito_700Bold' },
   bmiScale: { flexDirection: 'row', gap: 10, marginTop: 4 },
   bmiScaleItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   bmiScaleDot: { width: 8, height: 8, borderRadius: 4 },
-  bmiScaleText: { color: 'rgba(255,255,255,0.7)', fontSize: 10 },
+  bmiScaleText: { color: 'rgba(255,255,255,0.7)', fontSize: 10, fontFamily: 'Nunito_400Regular' },
   latestRow: { flexDirection: 'row', gap: 20, marginTop: 8 },
   latestItem: { alignItems: 'center' },
-  latestVal: { color: '#fff', fontSize: 18, fontWeight: '900' },
-  latestKey: { color: 'rgba(255,255,255,0.6)', fontSize: 10 },
+  latestVal: { color: '#fff', fontSize: 18, fontFamily: 'Nunito_900Black' },
+  latestKey: { color: 'rgba(255,255,255,0.6)', fontSize: 10, fontFamily: 'Nunito_400Regular' },
   logBanner: { flexDirection: 'row', alignItems: 'center', gap: 10, borderRadius: 14, paddingHorizontal: 16, paddingVertical: 13, marginBottom: 16 },
-  logBannerText: { flex: 1, color: '#fff', fontSize: 14, fontWeight: '700' },
-  sectionTitle: { fontSize: 16, fontWeight: '800', marginBottom: 14 },
+  logBannerText: { flex: 1, color: '#fff', fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  sectionTitle: { fontSize: 16, fontFamily: 'Nunito_800ExtraBold', marginBottom: 14 },
   vitalsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 8 },
   vitalCard: { width: '47%', borderRadius: 14, padding: 14, borderTopWidth: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 },
   vitalIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 8 },
-  vitalLabel: { fontSize: 12, fontWeight: '700', marginBottom: 4 },
-  vitalVal: { fontSize: 16, fontWeight: '900' },
-  vitalUnit: { fontSize: 10, fontWeight: '500' },
-  vitalNormal: { fontSize: 10, fontWeight: '500' },
+  vitalLabel: { fontSize: 12, fontFamily: 'Nunito_700Bold', marginBottom: 4 },
+  vitalVal: { fontSize: 16, fontFamily: 'Nunito_900Black' },
+  vitalUnit: { fontSize: 10, fontFamily: 'Nunito_400Regular' },
+  vitalNormal: { fontSize: 10, fontFamily: 'Nunito_400Regular' },
   historyCard: { borderRadius: 14, padding: 14, marginBottom: 10, flexDirection: 'row', gap: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 6, elevation: 2 },
   historyDate: { borderRadius: 10, padding: 8, alignItems: 'center', justifyContent: 'center', minWidth: 50 },
-  historyDateText: { fontSize: 11, fontWeight: '800', color: '#16A34A', textAlign: 'center' },
+  historyDateText: { fontSize: 11, fontFamily: 'Nunito_800ExtraBold', color: '#16A34A', textAlign: 'center' },
   historyValues: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  historyVal: { fontSize: 12 },
-  historyBMI: { fontSize: 11, marginTop: 4 },
-  historyNote: { fontSize: 11, marginTop: 2, fontStyle: 'italic' },
+  historyVal: { fontSize: 12, fontFamily: 'Nunito_400Regular' },
+  historyBMI: { fontSize: 11, marginTop: 4, fontFamily: 'Nunito_400Regular' },
+  historyNote: { fontSize: 11, marginTop: 2, fontStyle: 'italic', fontFamily: 'Nunito_400Regular' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
   modal: { borderTopLeftRadius: 24, borderTopRightRadius: 24, maxHeight: '90%' },
   modalHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderBottomWidth: 1, borderTopLeftRadius: 24, borderTopRightRadius: 24 },
   modalHandle: { position: 'absolute', top: 8, left: '45%', width: 40, height: 4, borderRadius: 2, backgroundColor: '#CBD5E1' },
-  modalTitle: { fontSize: 17, fontWeight: '900' },
+  modalTitle: { fontSize: 17, fontFamily: 'Nunito_900Black' },
   inputRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, marginBottom: 14 },
   inputIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 22, flexShrink: 0 },
-  inputLabel: { fontSize: 12, fontWeight: '700', marginBottom: 6 },
-  input: { borderRadius: 12, borderWidth: 1.5, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14 },
-  normalRange: { fontSize: 10, marginTop: 4 },
+  inputLabel: { fontSize: 12, fontFamily: 'Nunito_700Bold', marginBottom: 6 },
+  input: { borderRadius: 12, borderWidth: 1.5, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14, fontFamily: 'Nunito_400Regular' },
+  normalRange: { fontSize: 10, marginTop: 4, fontFamily: 'Nunito_400Regular' },
   bmiPreview: { borderRadius: 14, padding: 14, marginTop: 12, alignItems: 'center' },
   saveBtn: { borderRadius: 14, paddingVertical: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
-  saveBtnText: { color: '#fff', fontSize: 15, fontWeight: '900' },
+  saveBtnText: { color: '#fff', fontSize: 15, fontFamily: 'Nunito_900Black' },
 });

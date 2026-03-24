@@ -293,7 +293,7 @@ export default function LabAnalyzerScreen({ navigation }) {
                     <Ionicons name="flask" size={20} color={statusColor(report.result?.overall_status)} />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <Text style={[{ fontSize: 14, fontWeight: '700' }, { color: T.text }]}>
+                    <Text style={[{ fontSize: 14, fontFamily: 'Nunito_700Bold' }, { color: T.text }]}>
                       {format(new Date(report.date), 'dd MMM yyyy · hh:mm a')}
                     </Text>
                     <Text style={[{ fontSize: 12, marginTop: 2 }, { color: T.textMuted }]}>
@@ -332,7 +332,7 @@ export default function LabAnalyzerScreen({ navigation }) {
             <TouchableOpacity onPress={() => setShowManual(true)}
               style={[styles.startBtn, { backgroundColor: '#16A34A' }]} activeOpacity={0.85}>
               <Ionicons name="create-outline" size={16} color="#fff" />
-              <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>Type Report Values</Text>
+              <Text style={{ color: '#fff', fontFamily: 'Nunito_700Bold', fontSize: 14 }}>Type Report Values</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -345,31 +345,31 @@ export default function LabAnalyzerScreen({ navigation }) {
 const styles = StyleSheet.create({
   header:         { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 24, flexDirection: 'row', alignItems: 'center', gap: 14 },
   backBtn:        { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
-  headerTitle:    { color: '#fff', fontSize: 20, fontWeight: '900' },
+  headerTitle:    { color: '#fff', fontSize: 20, fontFamily: 'Nunito_900Black' },
   headerSub:      { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 2 },
   loadingOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, alignItems: 'center', justifyContent: 'center' },
   loadingBox:     { borderRadius: 20, padding: 32, alignItems: 'center', gap: 12, minWidth: 200 },
-  loadingText:    { fontSize: 14, fontWeight: '600' },
+  loadingText:    { fontSize: 14, fontFamily: 'Nunito_600SemiBold' },
   card:           { borderRadius: 20, padding: 18, marginBottom: 16, elevation: 3 },
-  cardTitle:      { fontSize: 17, fontWeight: '800' },
+  cardTitle:      { fontSize: 17, fontFamily: 'Nunito_800ExtraBold' },
   cardSub:        { fontSize: 12, marginTop: 4, marginBottom: 18 },
   uploadRow:      { flexDirection: 'row', gap: 10, marginBottom: 14 },
   uploadBtn:      { flex: 1, borderRadius: 16, padding: 12, alignItems: 'center', borderWidth: 1.5, borderStyle: 'dashed' },
   uploadIcon:     { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center', marginBottom: 8 },
-  uploadBtnTitle: { fontSize: 12, fontWeight: '700', textAlign: 'center' },
+  uploadBtnTitle: { fontSize: 12, fontFamily: 'Nunito_700Bold', textAlign: 'center' },
   uploadBtnSub:   { fontSize: 10, textAlign: 'center', marginTop: 2 },
   manualToggle:   { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 10 },
-  manualToggleText:{ color: '#16A34A', fontSize: 13, fontWeight: '600' },
+  manualToggleText:{ color: '#16A34A', fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
   manualInput:    { borderRadius: 14, borderWidth: 1.5, padding: 14, minHeight: 180, fontSize: 13, lineHeight: 20 },
   analyzeBtn:     { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 14, paddingVertical: 14 },
-  analyzeBtnText: { color: '#fff', fontSize: 15, fontWeight: '800' },
-  sectionTitle:   { fontSize: 16, fontWeight: '800', marginBottom: 12, marginTop: 4 },
+  analyzeBtnText: { color: '#fff', fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
+  sectionTitle:   { fontSize: 16, fontFamily: 'Nunito_800ExtraBold', marginBottom: 12, marginTop: 4 },
   reportRow:      { flexDirection: 'row', alignItems: 'center', borderRadius: 16, padding: 12, marginBottom: 10, borderWidth: 1 },
   reportIconBox:  { width: 46, height: 46, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
   deleteBtn:      { width: 36, height: 36, borderRadius: 18, backgroundColor: '#FEE2E2', alignItems: 'center', justifyContent: 'center', marginLeft: 8 },
   emptyBox:       { borderRadius: 20, padding: 40, alignItems: 'center', marginTop: 8 },
   emptyIcon:      { width: 90, height: 90, borderRadius: 45, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
-  emptyTitle:     { fontSize: 18, fontWeight: '800', marginBottom: 8 },
+  emptyTitle:     { fontSize: 18, fontFamily: 'Nunito_800ExtraBold', marginBottom: 8 },
   emptySub:       { fontSize: 13, textAlign: 'center', lineHeight: 20, marginBottom: 20 },
   startBtn:       { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 20, paddingVertical: 12, borderRadius: 12 },
 });

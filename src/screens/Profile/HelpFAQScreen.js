@@ -61,10 +61,10 @@ export default function HelpFAQScreen({ navigation }) {
 const styles = StyleSheet.create({
   header: { paddingHorizontal: 20, paddingBottom: 20, paddingTop: 12 },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.18)', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
-  headerTitle: { color: '#fff', fontSize: 24, fontWeight: '900' },
+  headerTitle: { color: '#fff', fontSize: 24, fontFamily: 'Nunito_900Black' },
   headerSub: { color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 4 },
   card: { borderRadius: 16, padding: 16, marginBottom: 12, borderWidth: 1.5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 },
   qRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
-  question: { flex: 1, fontSize: 14, fontWeight: '700', lineHeight: 20 },
+  question: { flex: 1, fontSize: 14, fontFamily: 'Nunito_700Bold', lineHeight: 20 },
   answer: { fontSize: 13, lineHeight: 20, marginTop: 12, paddingTop: 12, borderTopWidth: 1 },
 });

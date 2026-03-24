@@ -71,7 +71,7 @@ function ActivityRing({ value, max, color, size = 44, strokeWidth = 5 }) {
         transform: [{ rotate: `${pct * 360 - 90}deg` }],
       }} />
       <View style={{ position: 'absolute', inset: 0, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ fontSize: size * 0.2, fontWeight: '800', color }}>{Math.round(pct * 100)}</Text>
+        <Text style={{ fontSize: size * 0.2, fontFamily: 'Nunito_800ExtraBold', color }}>{Math.round(pct * 100)}</Text>
       </View>
     </View>
   );
@@ -284,21 +284,21 @@ export default function DashboardScreen({ navigation }) {
             {todayMeds.length === 0 ? (
               <View style={styles.notifEmpty}>
                 <Ionicons name="checkmark-circle" size={52} color="#16A34A" />
-                <Text style={[{ fontSize: 15, fontWeight: '700', marginTop: 12 }, { color: T.text }]}>All done!</Text>
-                <Text style={[{ fontSize: 13, marginTop: 4 }, { color: T.textMuted }]}>No medicines due right now</Text>
+                <Text style={[{ fontSize: 15, fontFamily: 'Nunito_700Bold', marginTop: 12 }, { color: T.text }]}>All done!</Text>
+                <Text style={[{ fontSize: 13, marginTop: 4, fontFamily: 'Nunito_400Regular' }, { color: T.textMuted }]}>No medicines due right now</Text>
               </View>
             ) : todayMeds.map((med, i) => (
               <View key={i} style={[styles.notifRow, { backgroundColor: T.cardAlt, borderLeftColor: med.color || '#16A34A' }]}>
                 <Ionicons name="medical" size={16} color={med.color || '#16A34A'} />
                 <View style={{ flex: 1 }}>
-                  <Text style={[{ fontSize: 14, fontWeight: '700' }, { color: T.text }]}>{med.name}</Text>
-                  <Text style={[{ fontSize: 11 }, { color: T.textMuted }]}>{med.memberName} · {(med.times || [med.time || ''])[0]}</Text>
+                  <Text style={[{ fontSize: 14, fontFamily: 'Nunito_700Bold' }, { color: T.text }]}>{med.name}</Text>
+                  <Text style={[{ fontSize: 11, fontFamily: 'Nunito_400Regular' }, { color: T.textMuted }]}>{med.memberName} · {(med.times || [med.time || ''])[0]}</Text>
                 </View>
               </View>
             ))}
             <TouchableOpacity style={[styles.notifAllBtn, { borderColor: '#16A34A' }]}
               onPress={() => { setShowNotif(false); navigation.navigate('Health', { screen: 'RemindersHome' }); }}>
-              <Text style={{ color: '#16A34A', fontWeight: '700', fontSize: 14 }}>View All Reminders →</Text>
+              <Text style={{ color: '#16A34A', fontFamily: 'Nunito_700Bold', fontSize: 14 }}>View All Reminders →</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
@@ -313,62 +313,62 @@ const styles = StyleSheet.create({
   decorCircle1: { position: 'absolute', width: 200, height: 200, borderRadius: 100, backgroundColor: 'rgba(255,255,255,0.04)', top: -80, right: -50 },
   decorCircle2: { position: 'absolute', width: 120, height: 120, borderRadius: 60,  backgroundColor: 'rgba(255,255,255,0.03)', bottom: -30, left: 20 },
   headerTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-  greetText: { color: 'rgba(255,255,255,0.65)', fontSize: 13, fontWeight: '500' },
-  nameText:  { color: '#fff', fontSize: 28, fontWeight: '900', letterSpacing: -0.5 },
+  greetText: { color: 'rgba(255,255,255,0.65)', fontSize: 13, fontFamily: 'Nunito_400Regular' },
+  nameText:  { color: '#fff', fontSize: 28, fontFamily: 'Nunito_900Black', letterSpacing: -0.5 },
   headerActions: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   iconBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
-  badgeDot: { position: 'absolute', top: 9, right: 9, width: 8, height: 8, borderRadius: 4, backgroundColor: '#FF4757', borderWidth: 1.5, borderColor: '#16A34A' },
+  badgeDot: { position: 'absolute', top: 9, right: 9, width: 8, height: 8, borderRadius: 4, backgroundColor: '#FF4757', borderWidth: 1.5, borderColor: '#14532D' },
   avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.25)', alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'rgba(255,255,255,0.4)' },
-  avatarText: { color: '#fff', fontSize: 18, fontWeight: '900' },
+  avatarText: { color: '#fff', fontSize: 18, fontFamily: 'Nunito_900Black' },
   scoreCard: { backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 20, padding: 18, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', marginBottom: 16 },
-  scoreTitle: { color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: '700', letterSpacing: 0.5, textTransform: 'uppercase' },
-  scoreNum:   { color: '#fff', fontSize: 42, fontWeight: '900', lineHeight: 48 },
-  scoreOf:    { fontSize: 16, fontWeight: '500', color: 'rgba(255,255,255,0.5)' },
+  scoreTitle: { color: 'rgba(255,255,255,0.7)', fontSize: 12, fontFamily: 'Nunito_700Bold', letterSpacing: 0.5, textTransform: 'uppercase' },
+  scoreNum:   { color: '#fff', fontSize: 42, fontFamily: 'Nunito_900Black', lineHeight: 48 },
+  scoreOf:    { fontSize: 16, fontFamily: 'Nunito_400Regular', color: 'rgba(255,255,255,0.5)' },
   trendRow:   { marginTop: 6 },
   trendPill:  { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: 'rgba(74,222,128,0.2)', borderRadius: 10, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start' },
-  trendTxt:   { color: '#4ADE80', fontSize: 10, fontWeight: '800' },
+  trendTxt:   { color: '#4ADE80', fontSize: 10, fontFamily: 'Nunito_800ExtraBold' },
   ringsWrap:  { alignItems: 'center', gap: 8 },
   ringsLegend:{ gap: 4 },
   legendRow:  { flexDirection: 'row', alignItems: 'center', gap: 4 },
   legendDot:  { width: 6, height: 6, borderRadius: 3 },
-  legendTxt:  { color: 'rgba(255,255,255,0.6)', fontSize: 10 },
+  legendTxt:  { color: 'rgba(255,255,255,0.6)', fontSize: 10, fontFamily: 'Nunito_400Regular' },
   statsRow:   { flexDirection: 'row', gap: 8 },
   statPill:   { flex: 1, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 14, paddingVertical: 10, alignItems: 'center', gap: 3, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
-  statVal:    { color: '#fff', fontSize: 16, fontWeight: '900' },
-  statLabel:  { color: 'rgba(255,255,255,0.55)', fontSize: 9, fontWeight: '600', letterSpacing: 0.3 },
+  statVal:    { color: '#fff', fontSize: 16, fontFamily: 'Nunito_900Black' },
+  statLabel:  { color: 'rgba(255,255,255,0.55)', fontSize: 9, fontFamily: 'Nunito_600SemiBold', letterSpacing: 0.3 },
   body: { paddingHorizontal: 16, paddingTop: 18, gap: 0 },
   tipCard: { flexDirection: 'row', alignItems: 'center', gap: 14, borderRadius: 18, padding: 16, marginBottom: 20, borderWidth: 1 },
   tipEmoji: { width: 52, height: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  tipLabel: { fontSize: 10, fontWeight: '800', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 5 },
-  tipBody:  { fontSize: 13, lineHeight: 19, fontWeight: '500' },
+  tipLabel: { fontSize: 10, fontFamily: 'Nunito_800ExtraBold', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 5 },
+  tipBody:  { fontSize: 13, lineHeight: 19, fontFamily: 'Nunito_400Regular' },
   section:  { marginBottom: 22 },
   sectionHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 },
-  sectionTitle: { fontSize: 17, fontWeight: '900', letterSpacing: -0.3 },
-  sectionSub:   { fontSize: 11, marginTop: 2 },
-  seeAll:       { fontSize: 13, color: '#16A34A', fontWeight: '700', marginTop: 4 },
+  sectionTitle: { fontSize: 17, fontFamily: 'Nunito_900Black', letterSpacing: -0.3 },
+  sectionSub:   { fontSize: 11, marginTop: 2, fontFamily: 'Nunito_400Regular' },
+  seeAll:       { fontSize: 13, color: '#16A34A', fontFamily: 'Nunito_700Bold', marginTop: 4 },
   medCard: { width: 130, borderRadius: 18, overflow: 'hidden', shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.07, shadowRadius: 10, elevation: 4 },
   medAccent: { height: 4 },
   medContent: { padding: 12 },
   medIconBox: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 8 },
-  medName:   { fontSize: 12, fontWeight: '800', lineHeight: 16, marginBottom: 3 },
-  medMember: { fontSize: 10, marginBottom: 6 },
+  medName:   { fontSize: 12, fontFamily: 'Nunito_800ExtraBold', lineHeight: 16, marginBottom: 3 },
+  medMember: { fontSize: 10, marginBottom: 6, fontFamily: 'Nunito_400Regular' },
   medTimeRow:{ flexDirection: 'row', alignItems: 'center', gap: 3 },
-  medTime:   { fontSize: 11, fontWeight: '700' },
+  medTime:   { fontSize: 11, fontFamily: 'Nunito_700Bold' },
   toolsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   toolCard:  { width: (width - 56) / 3, borderRadius: 18, padding: 14, alignItems: 'center', gap: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 3 },
   toolIcon:  { width: 50, height: 50, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
-  toolTitle: { fontSize: 11, fontWeight: '700', textAlign: 'center', lineHeight: 14 },
+  toolTitle: { fontSize: 11, fontFamily: 'Nunito_700Bold', textAlign: 'center', lineHeight: 14 },
   aiBanner:  { borderRadius: 22, padding: 20, flexDirection: 'row', alignItems: 'center', gap: 14, overflow: 'hidden', marginBottom: 20 },
   aiOrb:     { position: 'absolute', width: 150, height: 150, borderRadius: 75, backgroundColor: 'rgba(255,255,255,0.06)', right: -20, top: -40 },
-  aiLabel:   { color: 'rgba(255,255,255,0.6)', fontSize: 10, fontWeight: '800', letterSpacing: 1, marginBottom: 4 },
-  aiTitle:   { color: '#fff', fontSize: 20, fontWeight: '900', marginBottom: 4 },
-  aiSub:     { color: 'rgba(255,255,255,0.7)', fontSize: 12, lineHeight: 17 },
+  aiLabel:   { color: 'rgba(255,255,255,0.6)', fontSize: 10, fontFamily: 'Nunito_800ExtraBold', letterSpacing: 1, marginBottom: 4 },
+  aiTitle:   { color: '#fff', fontSize: 20, fontFamily: 'Nunito_900Black', marginBottom: 4 },
+  aiSub:     { color: 'rgba(255,255,255,0.7)', fontSize: 12, lineHeight: 17, fontFamily: 'Nunito_400Regular' },
   aiIconBox: { width: 52, height: 52, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
   overlay:    { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
   notifSheet: { borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 20, paddingBottom: 40 },
   sheetHandle:{ width: 40, height: 4, borderRadius: 2, backgroundColor: '#CBD5E1', alignSelf: 'center', marginBottom: 18 },
   notifHead:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 },
-  notifTitle: { fontSize: 18, fontWeight: '900' },
+  notifTitle: { fontSize: 18, fontFamily: 'Nunito_900Black' },
   notifEmpty: { alignItems: 'center', paddingVertical: 32 },
   notifRow:   { flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 14, padding: 13, marginBottom: 10, borderLeftWidth: 3 },
   notifAllBtn:{ borderWidth: 1.5, borderRadius: 14, paddingVertical: 13, alignItems: 'center', marginTop: 6 },

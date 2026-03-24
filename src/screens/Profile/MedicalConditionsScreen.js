@@ -50,7 +50,7 @@ export default function MedicalConditionsScreen({ navigation }) {
           <View style={styles.chips}>
             {COMMON_CONDITIONS.map(c => (
               <TouchableOpacity key={c} style={[styles.chip, { backgroundColor: T.inputBg, borderColor: T.border }, isActive(c, conditions) && styles.chipOn]} onPress={() => toggleChip(c, conditions, setConditions)} activeOpacity={0.8}>
-                <Text style={[styles.chipText, { color: T.textSub }, isActive(c, conditions) && { color: '#EF4444', fontWeight: '800' }]}>{c}</Text>
+                <Text style={[styles.chipText, { color: T.textSub }, isActive(c, conditions) && { color: '#EF4444', fontFamily: 'Nunito_800ExtraBold' }]}>{c}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -66,7 +66,7 @@ export default function MedicalConditionsScreen({ navigation }) {
           <View style={styles.chips}>
             {COMMON_MEDS.map(m => (
               <TouchableOpacity key={m} style={[styles.chip, { backgroundColor: T.inputBg, borderColor: T.border }, isActive(m, medications) && { backgroundColor: '#ECFDF5', borderColor: '#10B981' }]} onPress={() => toggleChip(m, medications, setMedications)} activeOpacity={0.8}>
-                <Text style={[styles.chipText, { color: T.textSub }, isActive(m, medications) && { color: '#10B981', fontWeight: '800' }]}>{m}</Text>
+                <Text style={[styles.chipText, { color: T.textSub }, isActive(m, medications) && { color: '#10B981', fontFamily: 'Nunito_800ExtraBold' }]}>{m}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -98,17 +98,17 @@ export default function MedicalConditionsScreen({ navigation }) {
 const styles = StyleSheet.create({
   header: { paddingHorizontal: 20, paddingBottom: 20, paddingTop: 12 },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.18)', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
-  headerTitle: { color: '#fff', fontSize: 24, fontWeight: '900' },
+  headerTitle: { color: '#fff', fontSize: 24, fontFamily: 'Nunito_900Black' },
   headerSub: { color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 4 },
   card: { borderRadius: 20, padding: 18, marginBottom: 14, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 },
-  sectionTitle: { fontSize: 15, fontWeight: '800', marginBottom: 4 },
+  sectionTitle: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold', marginBottom: 4 },
   hint: { fontSize: 12, marginBottom: 12 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 9 },
   chip: { paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10, borderWidth: 1.5 },
   chipOn: { backgroundColor: '#FFF5F5', borderColor: '#EF4444' },
-  chipText: { fontSize: 12, fontWeight: '600' },
+  chipText: { fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
   inputWrap: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 13, borderWidth: 1.5 },
-  input: { flex: 1, fontSize: 14, fontWeight: '500', minHeight: 40 },
+  input: { flex: 1, fontSize: 14, fontFamily: 'Nunito_600SemiBold', minHeight: 40 },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, paddingVertical: 16 },
-  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
+  saveBtnText: { color: '#fff', fontSize: 16, fontFamily: 'Nunito_800ExtraBold' },
 });

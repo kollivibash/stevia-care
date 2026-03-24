@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.background },
   scroll: { padding: SIZES.padding },
   section: { marginBottom: 20 },
-  label: { fontSize: SIZES.sm, fontWeight: '600', color: COLORS.textSecondary, marginBottom: 10 },
+  label: { fontSize: SIZES.sm, fontFamily: 'Nunito_600SemiBold', color: COLORS.textSecondary, marginBottom: 10 },
   memberChip: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
     backgroundColor: COLORS.white, borderRadius: SIZES.radiusFull,
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   memberChipActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   memberEmoji: { fontSize: 16 },
-  memberChipText: { fontSize: SIZES.sm, fontWeight: '600', color: COLORS.textSecondary },
+  memberChipText: { fontSize: SIZES.sm, fontFamily: 'Nunito_600SemiBold', color: COLORS.textSecondary },
   memberChipTextActive: { color: COLORS.white },
   prescriptionInput: {
     backgroundColor: COLORS.white,
@@ -197,14 +197,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', gap: 6,
     paddingVertical: 10, justifyContent: 'center',
   },
-  demoBtnText: { color: COLORS.primary, fontSize: SIZES.sm, fontWeight: '600' },
+  demoBtnText: { color: COLORS.primary, fontSize: SIZES.sm, fontFamily: 'Nunito_600SemiBold' },
   parseBtn: { marginTop: 4 },
   resultHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 },
-  resultTitle: { fontSize: SIZES.md, fontWeight: '700', color: COLORS.textPrimary },
+  resultTitle: { fontSize: SIZES.md, fontFamily: 'Nunito_700Bold', color: COLORS.textPrimary },
   medResultCard: { marginBottom: 10, padding: 14, overflow: 'hidden' },
   medColorBar: { position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, borderRadius: 2 },
   medResultContent: { paddingLeft: 10 },
-  medResultName: { fontSize: SIZES.base, fontWeight: '700', color: COLORS.textPrimary },
+  medResultName: { fontSize: SIZES.base, fontFamily: 'Nunito_700Bold', color: COLORS.textPrimary },
   medGeneric: { fontSize: SIZES.xs, color: COLORS.textMuted, marginTop: 1 },
   medResultMeta: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 8 },
   medInstructions: { fontSize: SIZES.xs, color: COLORS.textSecondary, marginTop: 6, fontStyle: 'italic' },
@@ -217,6 +217,6 @@ const styles = StyleSheet.create({
   adviceCard: {
     marginBottom: 10, borderLeftWidth: 3, borderLeftColor: COLORS.accent, paddingLeft: 16,
   },
-  adviceTitle: { fontSize: SIZES.sm, fontWeight: '700', color: COLORS.accentDark, marginBottom: 8 },
+  adviceTitle: { fontSize: SIZES.sm, fontFamily: 'Nunito_700Bold', color: COLORS.accentDark, marginBottom: 8 },
   adviceText: { fontSize: SIZES.sm, color: COLORS.textSecondary, marginBottom: 4 },
 });

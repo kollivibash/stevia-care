@@ -100,7 +100,7 @@ export default function ForgotPasswordScreen({ navigation }) {
                   <Ionicons name="checkmark-circle" size={56} color="#00C896" />
                 </View>
                 <Text style={styles.successTitle}>Email Sent! 📬</Text>
-                <Text style={styles.successText}>We've sent a password reset link to <Text style={{ fontWeight: '700', color: '#0057B8' }}>{email}</Text>. Check your inbox (and spam folder).</Text>
+                <Text style={styles.successText}>We've sent a password reset link to <Text style={{ fontFamily: 'Nunito_700Bold', color: '#0057B8' }}>{email}</Text>. Check your inbox (and spam folder).</Text>
                 <View style={styles.tipBox}>
                   <Ionicons name="bulb-outline" size={15} color="#F59E0B" />
                   <Text style={styles.tipText}>The link expires in 1 hour. Click it to set a new password.</Text>
@@ -132,22 +132,22 @@ const styles = StyleSheet.create({
   backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center', marginTop: 10, marginBottom: 24 },
   iconWrap: { alignItems: 'center', marginBottom: 20 },
   iconBg: { width: 90, height: 90, borderRadius: 45, backgroundColor: 'rgba(255,255,255,0.2)', borderWidth: 2.5, borderColor: 'rgba(255,255,255,0.35)', alignItems: 'center', justifyContent: 'center' },
-  title: { color: '#fff', fontSize: 30, fontWeight: '800', textAlign: 'center', marginBottom: 10 },
+  title: { color: '#fff', fontSize: 30, fontFamily: 'Nunito_800ExtraBold', textAlign: 'center', marginBottom: 10 },
   subtitle: { color: 'rgba(255,255,255,0.7)', fontSize: 14, textAlign: 'center', marginBottom: 28, lineHeight: 20 },
   card: { backgroundColor: '#fff', borderRadius: 24, padding: 22, ...SHADOWS.large },
   errorBox: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#FEE2E2', borderRadius: 10, padding: 12, marginBottom: 14 },
-  errorText: { flex: 1, fontSize: 13, color: '#DC2626', fontWeight: '500' },
-  inputLabel: { fontSize: 11, fontWeight: '700', color: '#64748B', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 },
+  errorText: { flex: 1, fontSize: 13, color: '#DC2626', fontFamily: 'Nunito_600SemiBold' },
+  inputLabel: { fontSize: 11, fontFamily: 'Nunito_700Bold', color: '#64748B', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 },
   inputRow: { flexDirection: 'row', alignItems: 'center', gap: 11, backgroundColor: '#F7F9FF', borderRadius: 13, borderWidth: 1.5, borderColor: '#E2E8F4', paddingHorizontal: 15, paddingVertical: 14, marginBottom: 18 },
   inputRowActive: { borderColor: '#0057B8', backgroundColor: '#F0F5FF' },
   input: { flex: 1, fontSize: 15.5, color: '#0F1729' },
   btn: { borderRadius: 14, overflow: 'hidden', marginBottom: 10 },
   btnInner: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 15 },
-  btnText: { color: '#fff', fontSize: 15.5, fontWeight: '700' },
+  btnText: { color: '#fff', fontSize: 15.5, fontFamily: 'Nunito_700Bold' },
   phoneAlt: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7, marginTop: 6, paddingVertical: 10 },
-  phoneAltText: { color: '#0057B8', fontSize: 14, fontWeight: '600' },
+  phoneAltText: { color: '#0057B8', fontSize: 14, fontFamily: 'Nunito_600SemiBold' },
   successIcon: { alignItems: 'center', marginBottom: 14 },
-  successTitle: { fontSize: 22, fontWeight: '800', color: '#0F1729', textAlign: 'center', marginBottom: 10 },
+  successTitle: { fontSize: 22, fontFamily: 'Nunito_800ExtraBold', color: '#0F1729', textAlign: 'center', marginBottom: 10 },
   successText: { fontSize: 14, color: '#64748B', textAlign: 'center', lineHeight: 21, marginBottom: 16 },
   tipBox: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, backgroundColor: '#FFFBEB', borderRadius: 10, padding: 12, marginBottom: 18 },
   tipText: { flex: 1, fontSize: 12.5, color: '#92400E', lineHeight: 18 },

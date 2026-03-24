@@ -109,7 +109,7 @@ export default function FamilyInsightsScreen({ navigation, route }) {
             >
               <LinearGradient colors={['#065F46','#10B981']} style={styles.analyzeBtn}>
                 <Ionicons name="analytics" size={16} color="#fff" />
-                <Text style={{ color: '#fff', fontSize: 14, fontWeight: '800' }}>
+                <Text style={{ color: '#fff', fontSize: 14, fontFamily: 'Nunito_800ExtraBold' }}>
                   Get AI Insights for {focusMember.name.split(' ')[0]}
                 </Text>
               </LinearGradient>
@@ -141,7 +141,7 @@ export default function FamilyInsightsScreen({ navigation, route }) {
               <LinearGradient colors={['#065F46','#10B981']} style={[styles.analyzeBtn, { marginTop: 4 }]}>
                 {loading ? <ActivityIndicator color="#fff" size="small" />
                   : <><Ionicons name="analytics" size={18} color="#fff" />
-                     <Text style={{ color: '#fff', fontSize: 15, fontWeight: '800' }}>Analyze All Family Health</Text></>
+                     <Text style={{ color: '#fff', fontSize: 15, fontFamily: 'Nunito_800ExtraBold' }}>Analyze All Family Health</Text></>
                 }
               </LinearGradient>
             </TouchableOpacity>
@@ -152,7 +152,7 @@ export default function FamilyInsightsScreen({ navigation, route }) {
         {loading && !insights && (
           <View style={[styles.card, { backgroundColor: T.card, alignItems: 'center', paddingVertical: 40 }]}>
             <ActivityIndicator size="large" color="#10B981" />
-            <Text style={[{ marginTop: 16, fontSize: 14, fontWeight: '600' }, { color: T.textSub }]}>
+            <Text style={[{ marginTop: 16, fontSize: 14, fontFamily: 'Nunito_600SemiBold' }, { color: T.textSub }]}>
               Stevia AI is analyzing...
             </Text>
           </View>
@@ -168,7 +168,7 @@ export default function FamilyInsightsScreen({ navigation, route }) {
             </View>
             {Object.entries(insights).map(([k, v]) => (
               <View key={k} style={[{ marginBottom: 14, paddingBottom: 14, borderBottomWidth: 1, borderBottomColor: T.divider }]}>
-                <Text style={[{ fontSize: 13, fontWeight: '800', marginBottom: 6, textTransform: 'capitalize' }, { color: '#10B981' }]}>{k.replace(/_/g, ' ')}</Text>
+                <Text style={[{ fontSize: 13, fontFamily: 'Nunito_800ExtraBold', marginBottom: 6, textTransform: 'capitalize' }, { color: '#10B981' }]}>{k.replace(/_/g, ' ')}</Text>
                 <Text style={[{ fontSize: 13, lineHeight: 20 }, { color: T.text }]}>
                   {typeof v === 'string' ? v : JSON.stringify(v)}
                 </Text>
@@ -184,15 +184,15 @@ export default function FamilyInsightsScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   header: { paddingHorizontal: 20, paddingTop: 14, paddingBottom: 22 },
   backBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
-  headerTitle: { color: '#fff', fontSize: 22, fontWeight: '900' },
+  headerTitle: { color: '#fff', fontSize: 22, fontFamily: 'Nunito_900Black' },
   headerSub: { color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 3 },
   card: { borderRadius: 18, padding: 16, marginBottom: 14, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 10, elevation: 3 },
   memberTop: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  memberName: { fontSize: 15, fontWeight: '800' },
+  memberName: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
   memberMeta: { fontSize: 11, marginTop: 2 },
-  secLabel: { fontSize: 13, fontWeight: '800', marginBottom: 4 },
+  secLabel: { fontSize: 13, fontFamily: 'Nunito_800ExtraBold', marginBottom: 4 },
   conditionChip: { backgroundColor: '#FEE2E2', borderRadius: 10, paddingHorizontal: 10, paddingVertical: 4 },
-  conditionText: { fontSize: 11, color: '#EF4444', fontWeight: '600' },
+  conditionText: { fontSize: 11, color: '#EF4444', fontFamily: 'Nunito_600SemiBold' },
   medRow: { flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8 },
   analyzeBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, paddingVertical: 14 },
 });

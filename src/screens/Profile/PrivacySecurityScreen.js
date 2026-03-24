@@ -47,10 +47,10 @@ export default function PrivacySecurityScreen({ navigation }) {
 const styles = StyleSheet.create({
   header: { paddingHorizontal: 20, paddingBottom: 20, paddingTop: 12 },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.18)', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
-  headerTitle: { color: '#fff', fontSize: 24, fontWeight: '900' },
+  headerTitle: { color: '#fff', fontSize: 24, fontFamily: 'Nunito_900Black' },
   headerSub: { color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 4 },
   card: { flexDirection: 'row', alignItems: 'flex-start', gap: 14, borderRadius: 18, padding: 16, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 },
   iconBox: { width: 44, height: 44, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
-  cardTitle: { fontSize: 14, fontWeight: '800', marginBottom: 5 },
+  cardTitle: { fontSize: 14, fontFamily: 'Nunito_800ExtraBold', marginBottom: 5 },
   cardSub: { fontSize: 12, lineHeight: 18 },
 });

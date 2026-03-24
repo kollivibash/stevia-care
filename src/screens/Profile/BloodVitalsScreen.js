@@ -40,7 +40,7 @@ export default function BloodVitalsScreen({ navigation }) {
           <View style={styles.chips}>
             {BLOOD_GROUPS.map(bg => (
               <TouchableOpacity key={bg} style={[styles.chip, { backgroundColor: T.inputBg, borderColor: T.border }, bloodGroup === bg && { backgroundColor: '#FFF5F5', borderColor: '#EF4444' }]} onPress={() => setBloodGroup(bg)} activeOpacity={0.8}>
-                <Text style={[styles.chipText, { color: T.textSub }, bloodGroup === bg && { color: '#EF4444', fontWeight: '900' }]}>{bg}</Text>
+                <Text style={[styles.chipText, { color: T.textSub }, bloodGroup === bg && { color: '#EF4444', fontFamily: 'Nunito_900Black' }]}>{bg}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -53,7 +53,7 @@ export default function BloodVitalsScreen({ navigation }) {
               <View style={[styles.radio, { borderColor: organDonor === opt ? '#0057B8' : T.textMuted }]}>
                 {organDonor === opt && <View style={styles.radioDot} />}
               </View>
-              <Text style={[styles.optionText, { color: T.text }, organDonor === opt && { color: '#0057B8', fontWeight: '700' }]}>{opt}</Text>
+              <Text style={[styles.optionText, { color: T.text }, organDonor === opt && { color: '#0057B8', fontFamily: 'Nunito_700Bold' }]}>{opt}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -77,20 +77,20 @@ export default function BloodVitalsScreen({ navigation }) {
 const styles = StyleSheet.create({
   header: { paddingHorizontal: 20, paddingBottom: 20, paddingTop: 12 },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.18)', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
-  headerTitle: { color: '#fff', fontSize: 24, fontWeight: '900' },
+  headerTitle: { color: '#fff', fontSize: 24, fontFamily: 'Nunito_900Black' },
   headerSub: { color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 4 },
   card: { borderRadius: 20, padding: 18, marginBottom: 14, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 },
-  sectionTitle: { fontSize: 15, fontWeight: '800', marginBottom: 4 },
+  sectionTitle: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold', marginBottom: 4 },
   hint: { fontSize: 12, marginBottom: 12 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 9 },
   chip: { paddingHorizontal: 16, paddingVertical: 12, borderRadius: 12, borderWidth: 1.5 },
-  chipText: { fontSize: 14, fontWeight: '700' },
+  chipText: { fontSize: 14, fontFamily: 'Nunito_700Bold' },
   optionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 14, padding: 14, borderWidth: 1.5, marginBottom: 10 },
   radio: { width: 20, height: 20, borderRadius: 10, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#0057B8' },
-  optionText: { fontSize: 14, fontWeight: '600' },
+  optionText: { fontSize: 14, fontFamily: 'Nunito_600SemiBold' },
   infoBox: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, borderRadius: 14, padding: 14, borderWidth: 1, marginBottom: 14 },
   infoText: { flex: 1, fontSize: 12, color: '#D97706', lineHeight: 18 },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, paddingVertical: 16 },
-  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
+  saveBtnText: { color: '#fff', fontSize: 16, fontFamily: 'Nunito_800ExtraBold' },
 });

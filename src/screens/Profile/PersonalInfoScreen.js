@@ -60,7 +60,7 @@ export default function PersonalInfoScreen({ navigation }) {
           <View style={styles.chipRow}>
             {GENDERS.map(g => (
               <TouchableOpacity key={g} style={[styles.chip, { backgroundColor: T.inputBg, borderColor: T.border }, gender.toLowerCase() === g.toLowerCase() && styles.chipActive]} onPress={() => setGender(g.toLowerCase())} activeOpacity={0.8}>
-                <Text style={[styles.chipText, { color: T.textSub }, gender.toLowerCase() === g.toLowerCase() && { color: '#0057B8', fontWeight: '800' }]}>{g}</Text>
+                <Text style={[styles.chipText, { color: T.textSub }, gender.toLowerCase() === g.toLowerCase() && { color: '#0057B8', fontFamily: 'Nunito_800ExtraBold' }]}>{g}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -69,7 +69,7 @@ export default function PersonalInfoScreen({ navigation }) {
           <View style={styles.chipRow}>
             {BLOOD_GROUPS.map(bg => (
               <TouchableOpacity key={bg} style={[styles.chip, { backgroundColor: T.inputBg, borderColor: T.border }, bloodGroup === bg && styles.chipActive]} onPress={() => setBloodGroup(bg)} activeOpacity={0.8}>
-                <Text style={[styles.chipText, { color: T.textSub }, bloodGroup === bg && { color: '#EF4444', fontWeight: '800' }]}>{bg}</Text>
+                <Text style={[styles.chipText, { color: T.textSub }, bloodGroup === bg && { color: '#EF4444', fontFamily: 'Nunito_800ExtraBold' }]}>{bg}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -90,16 +90,16 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   header: { paddingHorizontal: 20, paddingBottom: 20, paddingTop: 12 },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.18)', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
-  headerTitle: { color: '#fff', fontSize: 24, fontWeight: '900' },
-  headerSub: { color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 4 },
+  headerTitle: { color: '#fff', fontSize: 24, fontFamily: 'Nunito_900Black' },
+  headerSub: { color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 4, fontFamily: 'Nunito_400Regular' },
   card: { borderRadius: 20, padding: 18, marginBottom: 8, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 16, elevation: 5, gap: 4 },
-  label: { fontSize: 12, fontWeight: '700', marginBottom: 7, marginTop: 14 },
+  label: { fontSize: 12, fontFamily: 'Nunito_700Bold', marginBottom: 7, marginTop: 14, letterSpacing: 0.5 },
   inputWrap: { flexDirection: 'row', alignItems: 'center', gap: 10, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 13, borderWidth: 1.5 },
-  input: { flex: 1, fontSize: 15, fontWeight: '500' },
+  input: { flex: 1, fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 9, marginBottom: 4 },
   chip: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 10, borderWidth: 1.5 },
   chipActive: { backgroundColor: '#EFF5FF', borderColor: '#0057B8' },
-  chipText: { fontSize: 13, fontWeight: '600' },
+  chipText: { fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, paddingVertical: 16 },
-  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
+  saveBtnText: { color: '#fff', fontSize: 16, fontFamily: 'Nunito_800ExtraBold' },
 });
