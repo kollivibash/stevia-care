@@ -1,60 +1,60 @@
-// ─── Stevia Care — AI Service (Direct Groq) ──────────────────────────────
-// Calls Groq API directly from app — fast, always works, no server needed
+// ─── Stevia Care — AI Service (Claude by Anthropic) ──────────────────────
+// Calls Claude API directly from app — fast, always works, no server needed
 import { GROQ_API_KEY } from '../constants/config';
 
-const GROQ_URL   = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const CLAUDE_URL   = 'https://api.anthropic.com/v1/messages';
+const CLAUDE_MODEL = 'claude-haiku-4-5-20251001';
 
 // ── Core caller ───────────────────────────────────────────────────────────
-async function callGroq(system, userContent, maxTokens = 2000) {
+async function callClaude(system, userContent, maxTokens = 2000) {
   const key = GROQ_API_KEY;
   if (!key || key === 'YOUR_GROQ_API_KEY_HERE' || key === '') {
     throw new Error('Groq API key not set. Add GROQ_API_KEY in src/constants/config.js');
   }
-  const res = await fetch(GROQ_URL, {
+  const res = await fetch(CLAUDE_URL, {
     method:  'POST',
     headers: {
-      'Content-Type':  'application/json',
-      'Authorization': `Bearer ${key}`,
+      'Content-Type':      'application/json',
+      'x-api-key':         key,
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model:       GROQ_MODEL,
-      max_tokens:  maxTokens,
-      temperature: 0.7,
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user',   content: userContent },
-      ],
+      model:      CLAUDE_MODEL,
+      max_tokens: maxTokens,
+      system,
+      messages: [{ role: 'user', content: userContent }],
     }),
   });
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Groq error ${res.status}: ${err}`);
+    throw new Error(`Claude error ${res.status}: ${err}`);
   }
   const data = await res.json();
-  return data.choices[0].message.content;
+  return data.content[0].text;
 }
 
-async function callGroqChat(system, messages, maxTokens = 1500) {
+async function callClaudeChat(system, messages, maxTokens = 1500) {
   const key = GROQ_API_KEY;
   if (!key || key === 'YOUR_GROQ_API_KEY_HERE' || key === '') {
     throw new Error('Groq API key not set.');
   }
-  const res = await fetch(GROQ_URL, {
+  const res = await fetch(CLAUDE_URL, {
     method:  'POST',
     headers: {
-      'Content-Type':  'application/json',
-      'Authorization': `Bearer ${key}`,
+      'Content-Type':      'application/json',
+      'x-api-key':         key,
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model:      GROQ_MODEL,
+      model:      CLAUDE_MODEL,
       max_tokens: maxTokens,
-      messages:   [{ role: 'system', content: system }, ...messages],
+      system,
+      messages,
     }),
   });
-  if (!res.ok) throw new Error(`Groq error ${res.status}`);
+  if (!res.ok) throw new Error(`Claude error ${res.status}`);
   const data = await res.json();
-  return data.choices[0].message.content;
+  return data.content[0].text;
 }
 
 function parseJSON(text) {
@@ -81,7 +81,7 @@ ${reportText}
 Respond ONLY with this JSON:
 {"overall_status":"Normal|Borderline|Abnormal","summary":"2-3 sentence summary","critical_alerts":[],"parameters":[{"name":"","value":"","reference_range":"","status":"GREEN|YELLOW|RED","deviation":"","explanation":"","action":""}],"abnormal_count":0,"borderline_count":0,"normal_count":0,"key_findings":[],"diet_advice":[],"lifestyle_suggestions":[],"follow_up_tests":[],"consult_doctor_if":[],"disclaimer":"AI analysis only. Consult your doctor."}`;
 
-  const text = await callGroq(system, user, 4000);
+  const text = await callClaude(system, user, 4000);
   return parseJSON(text);
 }
 
@@ -96,12 +96,12 @@ Patient: Age ${age || 'unknown'}, ${gender || 'unknown'}. Conditions: ${conditio
 Be warm, practical, empathetic. For emergencies say CALL 108 immediately.
 Never suggest stopping prescribed medicines. Add brief disclaimer for medical advice.`;
 
-  return await callGroqChat(system, messages, 1500);
+  return await callClaudeChat(system, messages, 1500);
 }
 
 // ── 3. SYMPTOM CHECKER ────────────────────────────────────────────────────
 export async function analyzeSymptoms({ symptoms, age, gender, existingConditions }) {
-  const system = `You are a medical AI for Indian patients. Analyze symptoms carefully. 
+  const system = `You are a medical AI for Indian patients. Analyze symptoms carefully.
 Never diagnose definitively. Always recommend professional consultation. Respond ONLY in valid JSON.`;
 
   const user = `Symptoms: ${symptoms.join(', ')}. Age: ${age || 'unknown'}, Gender: ${gender || 'unknown'}. Conditions: ${existingConditions || 'none'}.
@@ -109,7 +109,7 @@ Never diagnose definitively. Always recommend professional consultation. Respond
 Respond ONLY with JSON:
 {"possibleConditions":[{"name":"","probability":"High|Medium|Low","description":""}],"urgency":"emergency|doctor|monitor|home","urgencyReason":"","redFlags":[],"homeRemedies":[],"whenToSeeDoctor":"","disclaimer":"AI info only. Always consult a doctor."}`;
 
-  const text = await callGroq(system, user, 1500);
+  const text = await callClaude(system, user, 1500);
   return parseJSON(text);
 }
 
@@ -125,7 +125,7 @@ ${prescriptionText}
 Respond ONLY with JSON:
 {"medicines":[{"name":"","dosage":"","frequency":"OD|BD|TDS|QID","times":["08:00"],"with_food":true,"duration_days":7,"notes":""}],"general_advice":[],"follow_up_note":""}`;
 
-  const text = await callGroq(system, user, 2000);
+  const text = await callClaude(system, user, 2000);
   return parseJSON(text);
 }
 
@@ -138,7 +138,7 @@ export async function checkDrugInteractions(medicines) {
 Respond ONLY with JSON:
 {"overall_risk":"Safe|Caution|Dangerous","summary":"","interactions":[{"drug1":"","drug2":"","severity":"Safe|Mild|Moderate|Severe","effect":"","recommendation":""}],"general_advice":[],"disclaimer":"Always consult your doctor."}`;
 
-  const text = await callGroq(system, user, 2000);
+  const text = await callClaude(system, user, 2000);
   return parseJSON(text);
 }
 
@@ -147,7 +147,7 @@ export async function analyzeFamilyHealth(familyData) {
   const system = `You are a family health analyst for Indian families. Respond ONLY in valid JSON.`;
   const user   = `Analyze: ${JSON.stringify(familyData)}\n\nRespond ONLY with JSON:\n{"family_health_score":75,"overall_summary":"","members":[{"name":"","score":80,"status":"Good|Fair|Needs Attention","key_risks":[],"immediate_actions":[]}],"family_insights":[],"improvement_plan":[]}`;
 
-  const text = await callGroq(system, user, 2000);
+  const text = await callClaude(system, user, 2000);
   return parseJSON(text);
 }
 
@@ -159,6 +159,6 @@ export async function analyzeCycleHealth({ cycles, age, symptoms, bmi, lifestyle
 Respond ONLY with JSON:
 {"next_period":{"estimated_date":"YYYY-MM-DD","confidence_window_days":3},"ovulation_window":{"start_date":"YYYY-MM-DD","end_date":"YYYY-MM-DD"},"cycle_analysis":{"regularity":"Regular|Irregular","avg_cycle_length":28,"summary":""},"pcod_risk":{"level":"Low|Moderate|High","explanation":""},"lifestyle_suggestions":{"diet":[],"exercise":[],"stress":[]},"when_to_see_doctor":[],"disclaimer":"Consult a gynecologist for medical advice."}`;
 
-  const text = await callGroq(system, user, 2000);
+  const text = await callClaude(system, user, 2000);
   return parseJSON(text);
 }
