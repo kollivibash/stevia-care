@@ -1,39 +1,39 @@
-// Stevia Care — Firebase Service (REST API only)
-const FIREBASE_API_KEY = 'AIzaSyALp0aZr4aaueA4HLNyuC7uiBSLfVaciVo';
+// ─── Stevia Care — OTP Service (Backend-based, no reCAPTCHA needed) ───────
+const BASE = 'https://healthpilot-pz8o.onrender.com/api/v1/auth';
 
 export async function sendPhoneOTP(phoneNumber) {
   try {
-    const formatted = phoneNumber.startsWith('+') ? phoneNumber : `+91${phoneNumber.replace(/\D/g, '')}`;
-    const res = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:sendVerificationCode?key=${FIREBASE_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber: formatted, recaptchaToken: 'test-token' }),
-      }
-    );
+    const phone = phoneNumber.replace(/\D/g, '').replace(/^91/, '').slice(-10);
+    const res = await fetch(`${BASE}/send-otp`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ phone }),
+    });
     const data = await res.json();
-    if (data.error) return { success: false, error: data.error.message };
-    return { success: true, sessionInfo: data.sessionInfo };
+    if (!res.ok) return { success: false, error: data.detail || 'Failed to send OTP' };
+    // dev_otp is returned when Fast2SMS is not configured (for testing)
+    return { success: true, sessionInfo: phone, devOtp: data.dev_otp || null };
   } catch (e) {
-    return { success: false, error: 'Network error.' };
+    return { success: false, error: 'Network error. Check your connection.' };
   }
 }
 
-export async function verifyPhoneOTP(sessionInfo, otp) {
+export async function verifyPhoneOTP(phone, otp) {
   try {
-    const res = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPhoneNumber?key=${FIREBASE_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionInfo, code: otp }),
-      }
-    );
+    const cleanPhone = phone.replace(/\D/g, '').replace(/^91/, '').slice(-10);
+    const res = await fetch(`${BASE}/verify-otp`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ phone: cleanPhone, otp }),
+    });
     const data = await res.json();
-    if (data.error) return { success: false, error: data.error.message };
-    return { success: true, idToken: data.idToken, phone: data.phoneNumber, uid: data.localId };
+    if (!res.ok) return { success: false, error: data.detail || 'Invalid OTP' };
+    return {
+      success: true,
+      token:   data.token || data.access_token,
+      user:    data.user,
+    };
   } catch (e) {
-    return { success: false, error: 'Network error.' };
+    return { success: false, error: 'Network error. Check your connection.' };
   }
 }

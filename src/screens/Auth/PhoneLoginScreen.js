@@ -1,128 +1,126 @@
+// ─── Stevia Care — Phone OTP Login (Premium UI) ────────────────────────────
 import React, { useState, useRef } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, TextInput,
-  Alert, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView,
+  Alert, ActivityIndicator, KeyboardAvoidingView, Platform,
+  ScrollView, Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore } from '../../store/authStore';
 import { sendPhoneOTP, verifyPhoneOTP } from '../../services/firebaseService';
-
-const API = 'https://healthpilot-pz8o.onrender.com/api/v1';
+import SteviaLogo from '../../components/SteviaLogo';
+import * as SecureStore from 'expo-secure-store';
+import { useAuthStore } from '../../store/authStore';
 
 export default function PhoneLoginScreen({ navigation }) {
-  const { login } = useAuthStore();
-  const [step,           setStep]           = useState('phone'); // phone | otp
-  const [phone,          setPhone]          = useState('');
-  const [otp,            setOtp]            = useState('');
-  const [verificationId, setVerificationId] = useState(null);
-  const [loading,        setLoading]        = useState(false);
-  const otpRefs = useRef([]);
+  const { } = useAuthStore();
+  const [step,    setStep]    = useState('phone');
+  const [phone,   setPhone]   = useState('');
+  const [otp,     setOtp]     = useState('');
+  const [loading, setLoading] = useState(false);
+  const [devOtp,  setDevOtp]  = useState(null); // shown in dev mode
+  const [sessionPhone, setSessionPhone] = useState('');
+  const otpRefs  = useRef([]);
+  const slideAnim = useRef(new Animated.Value(0)).current;
+
+  const slide = () => {
+    slideAnim.setValue(40);
+    Animated.spring(slideAnim, { toValue: 0, tension: 80, friction: 12, useNativeDriver: true }).start();
+  };
 
   const handleSendOTP = async () => {
-    if (phone.length < 10) {
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.length < 10) {
       Alert.alert('Invalid Number', 'Please enter a valid 10-digit mobile number.');
       return;
     }
     setLoading(true);
-    const result = await sendPhoneOTP(phone);
+    const result = await sendPhoneOTP(cleaned);
     setLoading(false);
     if (result.success) {
-      setVerificationId(result.sessionInfo);
+      setSessionPhone(cleaned.slice(-10));
+      setDevOtp(result.devOtp || null);
+      setOtp('');
       setStep('otp');
+      slide();
     } else {
-      Alert.alert('Failed to send OTP', result.error);
+      Alert.alert('Failed to Send OTP', result.error || 'Please try again.');
     }
   };
 
   const handleVerifyOTP = async () => {
     if (otp.length !== 6) {
-      Alert.alert('Invalid OTP', 'Please enter the 6-digit OTP.');
+      Alert.alert('Invalid OTP', 'Please enter all 6 digits.');
       return;
     }
     setLoading(true);
-    const result = await verifyPhoneOTP(verificationId, otp);
+    const result = await verifyPhoneOTP(sessionPhone, otp);
+    setLoading(false);
     if (!result.success) {
-      setLoading(false);
-      Alert.alert('Wrong OTP', result.error);
+      Alert.alert('Wrong OTP', result.error || 'Please try again.');
       return;
     }
-
-    // Send Firebase token to our backend to get app token
-    try {
-      const res  = await fetch(`${API}/auth/verify-otp`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({
-          phone:          `+91${phone}`,
-          firebase_token: result.idToken,
-          uid:            result.uid,
-        }),
-      });
-      const data = await res.json();
-      if (res.ok && (data.token || data.access_token)) {
-        const tokenStr = data.token || data.access_token;
-        const SecureStore = require('expo-secure-store');
-        await SecureStore.setItemAsync('auth_token', tokenStr);
-        await SecureStore.setItemAsync('user_data', JSON.stringify(data.user || { phone: `+91${phone}` }));
-        useAuthStore.setState({
-          user:            data.user || { phone: `+91${phone}`, name: `User${phone.slice(-4)}` },
-          token:           tokenStr,
-          isAuthenticated: true,
-          isLoading:       false,
-          error:           null,
-        });
-      } else {
-        Alert.alert('Login Failed', data.detail || 'Could not verify with server');
-      }
-    } catch (e) {
-      Alert.alert('Error', 'Could not connect to server. Please try again.');
-    }
-    setLoading(false);
+    // Save token and user
+    await SecureStore.setItemAsync('auth_token', result.token);
+    await SecureStore.setItemAsync('user_data', JSON.stringify(result.user));
+    useAuthStore.setState({
+      user:            result.user,
+      token:           result.token,
+      isAuthenticated: true,
+      isLoading:       false,
+      error:           null,
+    });
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#F0FDF4' }}>
-      <LinearGradient colors={['#14532D', '#16A34A', '#4ADE80']} style={styles.hero}>
+      <LinearGradient
+        colors={['#052E16', '#14532D', '#166534', '#16A34A']}
+        style={styles.hero}
+        start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+      >
+        {/* Decorative orbs */}
+        <View style={styles.orb1} />
+        <View style={styles.orb2} />
         <SafeAreaView edges={['top']}>
           <View style={styles.heroContent}>
-            <View style={styles.logoRing}>
-              <Ionicons name="leaf" size={34} color="#fff" />
-            </View>
-            <Text style={styles.appName}>Stevia Care</Text>
-            <Text style={styles.tagline}>Sign in with your mobile number</Text>
+            <SteviaLogo size={72} showText animate />
           </View>
         </SafeAreaView>
       </LinearGradient>
 
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-          <View style={styles.card}>
+          <Animated.View style={[styles.card, { transform: [{ translateY: slideAnim }] }]}>
 
             {step === 'phone' ? (
               <>
+                <View style={styles.iconBadge}>
+                  <Ionicons name="phone-portrait" size={22} color="#16A34A" />
+                </View>
                 <Text style={styles.cardTitle}>Enter Mobile Number</Text>
-                <Text style={styles.cardSub}>We'll send you a 6-digit OTP</Text>
+                <Text style={styles.cardSub}>We'll send a 6-digit OTP to verify you</Text>
 
+                <Text style={styles.label}>Mobile Number</Text>
                 <View style={styles.phoneRow}>
-                  <View style={styles.countryCode}>
-                    <Text style={styles.countryCodeText}>🇮🇳 +91</Text>
+                  <View style={styles.countryPill}>
+                    <Text style={styles.countryText}>🇮🇳  +91</Text>
                   </View>
                   <TextInput
                     style={styles.phoneInput}
                     value={phone}
                     onChangeText={setPhone}
-                    placeholder="9876543210"
-                    placeholderTextColor="#CBD5E1"
+                    placeholder="98765 43210"
+                    placeholderTextColor="#A0AEB5"
                     keyboardType="phone-pad"
                     maxLength={10}
                     autoFocus
                   />
                 </View>
 
-                <TouchableOpacity onPress={handleSendOTP} disabled={loading} style={{ marginTop: 20 }} activeOpacity={0.88}>
-                  <LinearGradient colors={['#14532D', '#16A34A']} style={styles.btn}>
+                <TouchableOpacity onPress={handleSendOTP} disabled={loading} activeOpacity={0.88} style={{ marginTop: 24 }}>
+                  <LinearGradient colors={['#14532D', '#16A34A']} style={styles.btn} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
                     {loading
                       ? <ActivityIndicator color="#fff" size="small" />
                       : <><Ionicons name="send" size={18} color="#fff" /><Text style={styles.btnText}>Send OTP</Text></>
@@ -132,27 +130,39 @@ export default function PhoneLoginScreen({ navigation }) {
               </>
             ) : (
               <>
-                <Text style={styles.cardTitle}>Enter OTP</Text>
+                <View style={styles.iconBadge}>
+                  <Ionicons name="shield-checkmark" size={22} color="#16A34A" />
+                </View>
+                <Text style={styles.cardTitle}>Verify OTP</Text>
                 <Text style={styles.cardSub}>
-                  Sent to +91 {phone}{'  '}
-                  <Text style={{ color: '#16A34A', fontWeight: '700' }} onPress={() => setStep('phone')}>
+                  Sent to +91 {sessionPhone.slice(0,5)} {sessionPhone.slice(5)}{'  '}
+                  <Text style={styles.changeLink} onPress={() => { setStep('phone'); setOtp(''); }}>
                     Change
                   </Text>
                 </Text>
 
+                {/* Dev OTP hint — remove when SMS is live */}
+                {devOtp ? (
+                  <View style={styles.devBanner}>
+                    <Ionicons name="information-circle" size={16} color="#0EA5E9" />
+                    <Text style={styles.devText}>Test OTP: <Text style={{ fontFamily: 'Nunito_900Black' }}>{devOtp}</Text></Text>
+                  </View>
+                ) : null}
+
+                <Text style={styles.label}>Enter 6-Digit OTP</Text>
                 <View style={styles.otpRow}>
                   {[0,1,2,3,4,5].map(i => (
                     <TextInput
                       key={i}
                       ref={r => otpRefs.current[i] = r}
-                      style={[styles.otpBox, otp[i] && styles.otpBoxFilled]}
+                      style={[styles.otpBox, otp[i] ? styles.otpBoxFilled : null]}
                       value={otp[i] || ''}
                       onChangeText={val => {
                         const v = val.replace(/[^0-9]/g, '');
                         const arr = otp.split('');
                         arr[i] = v;
-                        const newOtp = arr.join('').substring(0, 6);
-                        setOtp(newOtp);
+                        const next = arr.join('').substring(0, 6);
+                        setOtp(next);
                         if (v && i < 5) otpRefs.current[i + 1]?.focus();
                       }}
                       onKeyPress={({ nativeEvent }) => {
@@ -163,24 +173,33 @@ export default function PhoneLoginScreen({ navigation }) {
                       keyboardType="number-pad"
                       maxLength={1}
                       textAlign="center"
+                      autoFocus={i === 0}
                     />
                   ))}
                 </View>
 
-                <TouchableOpacity onPress={handleVerifyOTP} disabled={loading || otp.length !== 6} style={{ marginTop: 20 }} activeOpacity={0.88}>
+                <TouchableOpacity
+                  onPress={handleVerifyOTP}
+                  disabled={loading || otp.length !== 6}
+                  activeOpacity={0.88}
+                  style={{ marginTop: 24 }}
+                >
                   <LinearGradient
-                    colors={otp.length === 6 ? ['#14532D', '#16A34A'] : ['#CBD5E1', '#CBD5E1']}
+                    colors={otp.length === 6 ? ['#14532D', '#16A34A'] : ['#D1D5DB', '#D1D5DB']}
                     style={styles.btn}
+                    start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
                   >
                     {loading
                       ? <ActivityIndicator color="#fff" size="small" />
-                      : <><Ionicons name="checkmark-circle" size={18} color="#fff" /><Text style={styles.btnText}>Verify OTP</Text></>
+                      : <><Ionicons name="checkmark-circle" size={18} color="#fff" /><Text style={styles.btnText}>Verify & Sign In</Text></>
                     }
                   </LinearGradient>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={handleSendOTP} style={styles.resendRow}>
-                  <Text style={styles.resendText}>Didn't receive? <Text style={{ color: '#16A34A', fontWeight: '700' }}>Resend OTP</Text></Text>
+                  <Text style={styles.resendText}>
+                    Didn't receive? <Text style={styles.resendLink}>Resend OTP</Text>
+                  </Text>
                 </TouchableOpacity>
               </>
             )}
@@ -189,15 +208,17 @@ export default function PhoneLoginScreen({ navigation }) {
               <View style={styles.divLine} /><Text style={styles.divText}>or</Text><View style={styles.divLine} />
             </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.emailBtn}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.altBtn}>
               <Ionicons name="mail-outline" size={18} color="#16A34A" />
-              <Text style={styles.emailBtnText}>Sign in with Email</Text>
+              <Text style={styles.altBtnText}>Sign in with Email</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.registerRow}>
-              <Text style={styles.registerText}>New user? <Text style={styles.registerLink}>Create account →</Text></Text>
+              <Text style={styles.registerText}>
+                New to Stevia Care? <Text style={styles.registerLink}>Create Account →</Text>
+              </Text>
             </TouchableOpacity>
-          </View>
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -205,32 +226,56 @@ export default function PhoneLoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  hero:          { paddingBottom: 40 },
-  heroContent:   { alignItems: 'center', paddingTop: 20, paddingBottom: 10, gap: 10 },
-  logoRing:      { width: 72, height: 72, borderRadius: 36, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'rgba(255,255,255,0.35)' },
-  appName:       { color: '#fff', fontSize: 28, fontWeight: '900' },
-  tagline:       { color: 'rgba(255,255,255,0.75)', fontSize: 13 },
-  scroll:        { padding: 16, paddingTop: 0, paddingBottom: 40 },
-  card:          { backgroundColor: '#fff', borderRadius: 24, padding: 24, marginTop: -20, shadowColor: '#16A34A', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.12, shadowRadius: 24, elevation: 10 },
-  cardTitle:     { fontSize: 22, fontWeight: '900', color: '#0F1729', marginBottom: 4 },
-  cardSub:       { fontSize: 13, color: '#94A3B8', marginBottom: 24 },
-  phoneRow:      { flexDirection: 'row', gap: 10, alignItems: 'center' },
-  countryCode:   { backgroundColor: '#F0FDF4', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 13, borderWidth: 1.5, borderColor: '#DCFCE7' },
-  countryCodeText: { fontSize: 15, fontWeight: '700', color: '#14532D' },
-  phoneInput:    { flex: 1, backgroundColor: '#F5F7FF', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 13, fontSize: 18, fontWeight: '700', color: '#0F1729', borderWidth: 1.5, borderColor: '#E2E8F4', letterSpacing: 2 },
-  otpRow:        { flexDirection: 'row', gap: 10, justifyContent: 'center' },
-  otpBox:        { width: 46, height: 56, borderRadius: 12, backgroundColor: '#F5F7FF', borderWidth: 1.5, borderColor: '#E2E8F4', fontSize: 24, fontWeight: '900', color: '#0F1729' },
+  hero:          { paddingBottom: 50, overflow: 'hidden' },
+  orb1:          { position: 'absolute', width: 220, height: 220, borderRadius: 110, backgroundColor: 'rgba(255,255,255,0.06)', top: -60, right: -60 },
+  orb2:          { position: 'absolute', width: 140, height: 140, borderRadius: 70,  backgroundColor: 'rgba(255,255,255,0.05)', bottom: 10, left: -40 },
+  heroContent:   { alignItems: 'center', paddingTop: 24, paddingBottom: 16 },
+  scroll:        { padding: 16, paddingTop: 0, paddingBottom: 48 },
+
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 28,
+    padding: 28,
+    marginTop: -24,
+    shadowColor: '#14532D',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.15,
+    shadowRadius: 32,
+    elevation: 12,
+  },
+  iconBadge:     { width: 48, height: 48, borderRadius: 14, backgroundColor: '#F0FDF4', alignItems: 'center', justifyContent: 'center', marginBottom: 16, borderWidth: 1.5, borderColor: '#DCFCE7' },
+  cardTitle:     { fontSize: 24, fontFamily: 'Nunito_900Black', color: '#0D1F12', marginBottom: 4 },
+  cardSub:       { fontSize: 14, fontFamily: 'Nunito_400Regular', color: '#6B7280', marginBottom: 24 },
+  label:         { fontSize: 12, fontFamily: 'Nunito_700Bold', color: '#4B6B52', marginBottom: 8, letterSpacing: 0.6, textTransform: 'uppercase' },
+
+  phoneRow:      { flexDirection: 'row', gap: 10 },
+  countryPill:   { backgroundColor: '#F0FDF4', borderRadius: 14, paddingHorizontal: 14, paddingVertical: 14, borderWidth: 1.5, borderColor: '#DCFCE7', justifyContent: 'center' },
+  countryText:   { fontSize: 15, fontFamily: 'Nunito_700Bold', color: '#14532D' },
+  phoneInput:    { flex: 1, backgroundColor: '#F5FAF6', borderRadius: 14, paddingHorizontal: 16, paddingVertical: 14, fontSize: 20, fontFamily: 'Nunito_800ExtraBold', color: '#0D1F12', borderWidth: 1.5, borderColor: '#E8F0E9', letterSpacing: 3 },
+
+  otpRow:        { flexDirection: 'row', gap: 10, justifyContent: 'center', marginTop: 4 },
+  otpBox:        { width: 48, height: 60, borderRadius: 14, backgroundColor: '#F5FAF6', borderWidth: 2, borderColor: '#E8F0E9', fontSize: 26, fontFamily: 'Nunito_900Black', color: '#0D1F12' },
   otpBoxFilled:  { borderColor: '#16A34A', backgroundColor: '#F0FDF4' },
-  btn:           { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 14, paddingVertical: 15 },
-  btnText:       { color: '#fff', fontSize: 16, fontWeight: '800' },
-  resendRow:     { alignItems: 'center', marginTop: 16 },
-  resendText:    { fontSize: 13, color: '#64748B' },
-  divider:       { flexDirection: 'row', alignItems: 'center', marginVertical: 18 },
-  divLine:       { flex: 1, height: 1, backgroundColor: '#E2E8F4' },
-  divText:       { marginHorizontal: 14, color: '#94A3B8', fontSize: 13 },
-  emailBtn:      { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 14, paddingVertical: 14, borderWidth: 1.5, borderColor: '#16A34A', backgroundColor: '#F0FDF4' },
-  emailBtnText:  { color: '#16A34A', fontSize: 14, fontWeight: '700' },
-  registerRow:   { alignItems: 'center', marginTop: 20 },
-  registerText:  { fontSize: 13, color: '#64748B' },
-  registerLink:  { color: '#16A34A', fontWeight: '800' },
+
+  btn:           { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 16, paddingVertical: 16 },
+  btnText:       { color: '#fff', fontSize: 17, fontFamily: 'Nunito_800ExtraBold' },
+
+  changeLink:    { color: '#16A34A', fontFamily: 'Nunito_700Bold' },
+  resendRow:     { alignItems: 'center', marginTop: 18 },
+  resendText:    { fontSize: 14, fontFamily: 'Nunito_400Regular', color: '#64748B' },
+  resendLink:    { color: '#16A34A', fontFamily: 'Nunito_700Bold' },
+
+  devBanner:     { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#F0F9FF', borderRadius: 12, padding: 12, marginBottom: 16, borderWidth: 1, borderColor: '#BAE6FD' },
+  devText:       { fontSize: 13, fontFamily: 'Nunito_600SemiBold', color: '#0369A1' },
+
+  divider:       { flexDirection: 'row', alignItems: 'center', marginVertical: 22 },
+  divLine:       { flex: 1, height: 1, backgroundColor: '#E8F0E9' },
+  divText:       { marginHorizontal: 14, color: '#94A3B8', fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
+
+  altBtn:        { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 16, paddingVertical: 15, borderWidth: 1.5, borderColor: '#16A34A', backgroundColor: '#F0FDF4' },
+  altBtnText:    { color: '#16A34A', fontSize: 15, fontFamily: 'Nunito_700Bold' },
+
+  registerRow:   { alignItems: 'center', marginTop: 22 },
+  registerText:  { fontSize: 14, fontFamily: 'Nunito_400Regular', color: '#64748B' },
+  registerLink:  { color: '#16A34A', fontFamily: 'Nunito_800ExtraBold' },
 });
