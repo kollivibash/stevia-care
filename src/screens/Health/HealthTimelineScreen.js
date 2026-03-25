@@ -100,8 +100,9 @@ function TimelineEvent({ event, isLast, T }) {
 }
 
 export default function HealthTimelineScreen({ navigation }) {
-  const { isDark } = useThemeStore();
+  const { isDark, languageCode } = useThemeStore();
   const T = getTheme(isDark);
+  const locale = languageCode === 'en' ? 'en-IN' : languageCode;
   const { user } = useAuthStore();
   const { labReports, vitalsLog, reminders } = useHealthStore();
   const [activeFilter, setActiveFilter] = useState('all');
@@ -119,7 +120,7 @@ export default function HealthTimelineScreen({ navigation }) {
         type:      'lab',
         typeLabel: 'Lab',
         date:      new Date(r.date || r.createdAt || Date.now()),
-        dateStr:   new Date(r.date || r.createdAt || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        dateStr:   new Date(r.date || r.createdAt || Date.now()).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' }),
         title:     r.name || 'Lab Report',
         summary:   `Overall: ${overall}. ${abnormal > 0 ? `${abnormal} abnormal parameter(s) found.` : 'All parameters within range.'}`,
         details: [
@@ -138,10 +139,10 @@ export default function HealthTimelineScreen({ navigation }) {
         type:      'vitals',
         typeLabel: 'Vitals',
         date:      new Date(v.date || v.timestamp || Date.now()),
-        dateStr:   new Date(v.date || v.timestamp || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        dateStr:   new Date(v.date || v.timestamp || Date.now()).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' }),
         title:     'Vitals Recorded',
         summary:   [
-          v.bp && `BP: ${v.bp}`,
+          (v.systolic && v.diastolic) && `BP: ${v.systolic}/${v.diastolic}`,
           v.pulse && `Pulse: ${v.pulse} bpm`,
           v.weight && `Weight: ${v.weight} kg`,
           v.bmi && `BMI: ${v.bmi}`,
@@ -149,7 +150,7 @@ export default function HealthTimelineScreen({ navigation }) {
           v.spo2 && `SpO₂: ${v.spo2}%`,
         ].filter(Boolean).join(' · ') || 'Vitals logged',
         details: [
-          v.bp     && { key: 'Blood Pressure', val: v.bp },
+          (v.systolic && v.diastolic) && { key: 'Blood Pressure', val: `${v.systolic}/${v.diastolic} mmHg` },
           v.pulse  && { key: 'Pulse',          val: v.pulse + ' bpm' },
           v.weight && { key: 'Weight',         val: v.weight + ' kg' },
           v.height && { key: 'Height',         val: v.height + ' cm' },
@@ -170,7 +171,7 @@ export default function HealthTimelineScreen({ navigation }) {
         type:      'medicine',
         typeLabel: 'Medicines',
         date:      new Date(r.createdAt || r.startDate || Date.now()),
-        dateStr:   new Date(r.createdAt || r.startDate || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        dateStr:   new Date(r.createdAt || r.startDate || Date.now()).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' }),
         title:     r.name || 'Prescription Added',
         summary:   `Medicines: ${medNames}`,
         details:   (r.medicines || []).map(m => ({
@@ -192,7 +193,7 @@ export default function HealthTimelineScreen({ navigation }) {
   const grouped = useMemo(() => {
     const groups = {};
     filtered.forEach(e => {
-      const key = e.date.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+      const key = e.date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
       if (!groups[key]) groups[key] = [];
       groups[key].push(e);
     });
@@ -246,12 +247,20 @@ export default function HealthTimelineScreen({ navigation }) {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 16 }}>
 
-        {grouped.length === 0 ? (
+        {grouped.length === 0 && allEvents.length === 0 ? (
           <View style={styles.emptyBox}>
             <Ionicons name="time-outline" size={64} color={T.textMuted} style={{ marginBottom: 16 }} />
             <Text style={[styles.emptyTitle, { color: T.text }]}>No records yet</Text>
             <Text style={[styles.emptySub, { color: T.textMuted }]}>
               Your health history will appear here as you add lab reports, vitals, and medicines.
+            </Text>
+          </View>
+        ) : grouped.length === 0 && allEvents.length > 0 ? (
+          <View style={styles.emptyBox}>
+            <Ionicons name="filter-outline" size={52} color={T.textMuted} style={{ marginBottom: 16 }} />
+            <Text style={[styles.emptyTitle, { color: T.text }]}>No {FILTERS.find(f => f.id === activeFilter)?.label} records</Text>
+            <Text style={[styles.emptySub, { color: T.textMuted }]}>
+              No events match this filter. Try selecting "All" to see everything.
             </Text>
           </View>
         ) : (

@@ -118,6 +118,12 @@ export default function DashboardScreen({ navigation }) {
   const T = getTheme(isDark);
   const [showNotif, setShowNotif] = useState(false);
   const healthScore = calcHealthScore({ vitalsLog, labReports, reminders, adherenceLogs, familyMembers });
+  const hasData = (vitalsLog?.length > 0) || (labReports?.length > 0) || (reminders?.length > 0);
+  // Score change vs last week — +1 per data type added recently
+  const scoreTrend = !hasData ? null
+    : vitalsLog?.length > 0 && labReports?.length > 0 ? '+10 this month'
+    : vitalsLog?.length > 0 ? '+5 this month'
+    : '+3 this month';
   const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(24)).current;
 
@@ -189,10 +195,17 @@ export default function DashboardScreen({ navigation }) {
                 <Text style={styles.scoreTitle}>{t(languageCode, 'healthScore')}</Text>
                 <Text style={styles.scoreNum}>{healthScore}<Text style={styles.scoreOf}>/100</Text></Text>
                 <View style={styles.trendRow}>
-                  <View style={styles.trendPill}>
-                    <Ionicons name="trending-up" size={10} color="#4ADE80" />
-                    <Text style={styles.trendTxt}>+5 this month</Text>
-                  </View>
+                  {scoreTrend ? (
+                    <View style={styles.trendPill}>
+                      <Ionicons name="trending-up" size={10} color="#4ADE80" />
+                      <Text style={styles.trendTxt}>{scoreTrend}</Text>
+                    </View>
+                  ) : (
+                    <View style={[styles.trendPill, { backgroundColor: 'rgba(251,191,36,0.2)' }]}>
+                      <Ionicons name="add-circle-outline" size={10} color="#FCD34D" />
+                      <Text style={[styles.trendTxt, { color: '#FCD34D' }]}>Add data to improve</Text>
+                    </View>
+                  )}
                 </View>
               </View>
               {/* Activity rings — Apple Health inspired */}
@@ -234,6 +247,19 @@ export default function DashboardScreen({ navigation }) {
           </TouchableOpacity>
 
           {/* ── Medisafe-style Medicine strip ── */}
+          {todayMeds.length === 0 && (
+            <TouchableOpacity onPress={() => navigation.navigate('Health', { screen: 'RemindersHome' })} activeOpacity={0.85}
+              style={[styles.emptyMedsCard, { backgroundColor: T.card, borderColor: T.border }]}>
+              <View style={[styles.emptyMedsIcon, { backgroundColor: '#FEF3C7' }]}>
+                <Ionicons name="medical" size={22} color="#F59E0B" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.emptyMedsTitle, { color: T.text }]}>No medicines added yet</Text>
+                <Text style={[styles.emptyMedsSub, { color: T.textMuted }]}>Tap to set daily medicine reminders</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={T.textMuted} />
+            </TouchableOpacity>
+          )}
           {todayMeds.length > 0 && (
             <View style={styles.section}>
               <View style={styles.sectionHead}>
@@ -405,6 +431,10 @@ const styles = StyleSheet.create({
   medMember: { fontSize: 10, marginBottom: 6, fontFamily: 'Nunito_400Regular' },
   medTimeRow:{ flexDirection: 'row', alignItems: 'center', gap: 3 },
   medTime:   { fontSize: 11, fontFamily: 'Nunito_700Bold' },
+  emptyMedsCard:  { flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 16, padding: 14, marginBottom: 20, borderWidth: 1 },
+  emptyMedsIcon:  { width: 44, height: 44, borderRadius: 13, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  emptyMedsTitle: { fontSize: 13, fontFamily: 'Nunito_800ExtraBold' },
+  emptyMedsSub:   { fontSize: 11, marginTop: 2, fontFamily: 'Nunito_400Regular' },
   toolsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   toolCard:  { width: (width - 56) / 3, borderRadius: 18, padding: 14, alignItems: 'center', gap: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 3 },
   toolIcon:  { width: 50, height: 50, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },

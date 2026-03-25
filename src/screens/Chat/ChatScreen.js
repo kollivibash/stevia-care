@@ -16,12 +16,12 @@ import { useAuthStore } from '../../store/authStore';
 import { useThemeStore, getTheme, tr } from '../../store/themeStore';
 
 const SUGGESTED_BY_LANG = {
-  hi: ['🥗 उच्च BP के लिए क्या खाएं?', '💊 PCOD को आहार से कैसे नियंत्रित करें?', '😴 मैं हमेशा थका हुआ क्यों रहता हूँ?', '🫀 विटामिन D की कमी के संकेत?', '🏃 मधुमेह के लिए सबसे अच्छे व्यायाम?', '💧 मुझे कितना पानी पीना चाहिए?'],
-  bn: ['🥗 উচ্চ BP-এর জন্য কী খাবেন?', '💊 PCOD কীভাবে নিয়ন্ত্রণ করবেন?', '😴 সবসময় ক্লান্ত লাগে কেন?', '🫀 ভিটামিন D-এর অভাবের লক্ষণ?', '🏃 ডায়াবেটিসের জন্য ব্যায়াম?', '💧 কতটুকু পানি পান করবেন?'],
-  ta: ['🥗 அதிக BP-க்கு என்ன சாப்பிட வேண்டும்?', '💊 PCOD-ஐ உணவால் கட்டுப்படுத்துவது எப்படி?', '😴 எப்போதும் சோர்வாக இருப்பது ஏன்?', '🫀 வைட்டமின் D குறைபாட்டின் அறிகுறிகள்?', '🏃 நீரிழிவுக்கான சிறந்த உடற்பயிற்சி?', '💧 எவ்வளவு தண்ணீர் குடிக்க வேண்டும்?'],
-  te: ['🥗 అధిక BP కోసం ఏమి తినాలి?', '💊 PCOD ని ఆహారంతో ఎలా నిర్వహించాలి?', '😴 నేను ఎప్పుడూ అలసిపోతున్నాను ఎందుకు?', '🫀 విటమిన్ D లోపం సంకేతాలు?', '🏃 మధుమేహానికి ఉత్తమ వ్యాయామాలు?', '💧 నేను ఎంత నీరు తాగాలి?'],
-  mr: ['🥗 उच्च BP साठी काय खावे?', '💊 PCOD आहाराने कसे नियंत्रित करावे?', '😴 मला नेहमी थकवा का येतो?', '🫀 व्हिटॅमिन D च्या कमतरतेची लक्षणे?', '🏃 मधुमेहासाठी सर्वोत्तम व्यायाम?', '💧 मला किती पाणी प्यायला हवे?'],
-  en: ['🥗 What should I eat for high BP?', '💊 How do I manage PCOD with diet?', '😴 Why am I always tired?', '🫀 Signs of vitamin D deficiency?', '🏃 Best exercises for diabetes?', '💧 How much water should I drink?'],
+  hi: ['उच्च BP के लिए क्या खाएं?', 'PCOD को आहार से कैसे नियंत्रित करें?', 'मैं हमेशा थका हुआ क्यों रहता हूँ?', 'विटामिन D की कमी के संकेत?', 'मधुमेह के लिए सबसे अच्छे व्यायाम?', 'मुझे कितना पानी पीना चाहिए?'],
+  bn: ['উচ্চ BP-এর জন্য কী খাবেন?', 'PCOD কীভাবে নিয়ন্ত্রণ করবেন?', 'সবসময় ক্লান্ত লাগে কেন?', 'ভিটামিন D-এর অভাবের লক্ষণ?', 'ডায়াবেটিসের জন্য ব্যায়াম?', 'কতটুকু পানি পান করবেন?'],
+  ta: ['அதிக BP-க்கு என்ன சாப்பிட வேண்டும்?', 'PCOD-ஐ உணவால் கட்டுப்படுத்துவது எப்படி?', 'எப்போதும் சோர்வாக இருப்பது ஏன்?', 'வைட்டமின் D குறைபாட்டின் அறிகுறிகள்?', 'நீரிழிவுக்கான சிறந்த உடற்பயிற்சி?', 'எவ்வளவு தண்ணீர் குடிக்க வேண்டும்?'],
+  te: ['అధిక BP కోసం ఏమి తినాలి?', 'PCOD ని ఆహారంతో ఎలా నిర్వహించాలి?', 'నేను ఎప్పుడూ అలసిపోతున్నాను ఎందుకు?', 'విటమిన్ D లోపం సంకేతాలు?', 'మధుమేహానికి ఉత్తమ వ్యాయామాలు?', 'నేను ఎంత నీరు తాగాలి?'],
+  mr: ['उच्च BP साठी काय खावे?', 'PCOD आहाराने कसे नियंत्रित करावे?', 'मला नेहमी थकवा का येतो?', 'व्हिटॅमिन D च्या कमतरतेची लक्षणे?', 'मधुमेहासाठी सर्वोत्तम व्यायाम?', 'मला किती पाणी प्यायला हवे?'],
+  en: ['What should I eat for high BP?', 'How do I manage PCOD with diet?', 'Why am I always tired?', 'Signs of vitamin D deficiency?', 'Best exercises for diabetes?', 'How much water should I drink?'],
 };
 
 export default function ChatScreen({ navigation }) {
@@ -39,6 +39,7 @@ export default function ChatScreen({ navigation }) {
   }]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [lastFailedMsg, setLastFailedMsg] = useState(null);
   const listRef = useRef(null);
 
   const sendMessage = async (text) => {
@@ -61,7 +62,8 @@ export default function ChatScreen({ navigation }) {
       });
       setMessages(prev => [...prev, { id: `a_${Date.now()}`, role: 'assistant', content: reply, time: new Date() }]);
     } catch (e) {
-      setMessages(prev => [...prev, { id: `e_${Date.now()}`, role: 'assistant', content: '⚠️ Something went wrong. Please check your connection and try again.', time: new Date() }]);
+      setLastFailedMsg(msg);
+      setMessages(prev => [...prev, { id: `e_${Date.now()}`, role: 'error', content: 'Something went wrong. Please check your connection.', time: new Date() }]);
     } finally {
       setLoading(false);
       setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100);
@@ -69,22 +71,30 @@ export default function ChatScreen({ navigation }) {
   };
 
   const renderMsg = ({ item }) => {
-    const isUser = item.role === 'user';
+    const isUser  = item.role === 'user';
+    const isError = item.role === 'error';
     const timeStr = item.time instanceof Date ? item.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
     return (
       <View style={[styles.msgWrap, isUser ? styles.msgWrapUser : styles.msgWrapAI]}>
         {!isUser && (
-          <LinearGradient colors={['#064E3B', '#16A34A']} style={styles.aiAvatar}>
-            <Ionicons name="leaf" size={14} color="#fff" />
+          <LinearGradient colors={isError ? ['#7F1D1D','#DC2626'] : ['#064E3B', '#16A34A']} style={styles.aiAvatar}>
+            <Ionicons name={isError ? 'alert-circle' : 'leaf'} size={14} color="#fff" />
           </LinearGradient>
         )}
         <View style={[styles.bubble,
-          isUser ? [styles.userBubble] : [styles.aiBubble, { backgroundColor: T.card }]
+          isUser ? [styles.userBubble] : [styles.aiBubble, { backgroundColor: isError ? '#FEF2F2' : T.card }]
         ]}>
           {isUser ? (
             <Text style={styles.userText}>{item.content}</Text>
           ) : (
-            <Text style={[styles.aiText, { color: T.text }]}>{item.content}</Text>
+            <Text style={[styles.aiText, { color: isError ? '#DC2626' : T.text }]}>{item.content}</Text>
+          )}
+          {isError && lastFailedMsg && (
+            <TouchableOpacity onPress={() => { setLastFailedMsg(null); sendMessage(lastFailedMsg); }}
+              style={styles.retryBtn}>
+              <Ionicons name="refresh" size={12} color="#DC2626" />
+              <Text style={styles.retryText}>Tap to retry</Text>
+            </TouchableOpacity>
           )}
           <Text style={[styles.msgTime, { color: isUser ? 'rgba(255,255,255,0.55)' : T.textMuted }]}>{timeStr}</Text>
         </View>
@@ -214,6 +224,8 @@ const styles = StyleSheet.create({
   suggestGrid: { gap: 8 },
   suggestChip: { flexDirection: 'row', alignItems: 'center', borderRadius: 14, paddingHorizontal: 14, paddingVertical: 11, borderWidth: 1 },
   suggestText: { fontSize: 13, fontFamily: 'Nunito_400Regular' },
+  retryBtn:  { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 6, paddingVertical: 4 },
+  retryText: { fontSize: 11, fontFamily: 'Nunito_700Bold', color: '#DC2626' },
   inputBar: { flexDirection: 'row', alignItems: 'flex-end', gap: 10, padding: 12, borderTopWidth: 0.5 },
   input: { flex: 1, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 10, fontSize: 14, borderWidth: 1.5, maxHeight: 100, minHeight: 44, fontFamily: 'Nunito_400Regular' },
   sendBtn: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },

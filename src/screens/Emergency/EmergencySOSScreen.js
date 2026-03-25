@@ -16,12 +16,12 @@ const EMERGENCY_NUMBERS = [
 ];
 
 const FIRST_AID = [
-  { title: 'Heart Attack',  steps: ['Call 108 immediately','Make person sit/lie comfortably','Loosen tight clothing','Give aspirin if available & not allergic','Do CPR if unconscious & not breathing'], icon: '🫀' },
-  { title: 'Choking',       steps: ['Ask if they can cough','Encourage forceful coughing','Give 5 back blows between shoulder blades','5 abdominal thrusts (Heimlich)','Call 108 if not resolved'], icon: '🤚' },
-  { title: 'Bleeding',      steps: ['Apply firm pressure with clean cloth','Keep pressure for 10–15 minutes','Do not remove cloth — add more if needed','Elevate injured area above heart','Call 108 for severe bleeding'], icon: '🩹' },
-  { title: 'Burns',         steps: ['Cool with running water for 20 min','Do not use ice or butter','Cover with clean bandage','Do not pop blisters','Seek medical help for large burns'], icon: '🔥' },
-  { title: 'Seizure',       steps: ['Clear the area around person','Cushion their head','Do not restrain them','Turn on side if vomiting','Time the seizure — call 108 if > 5 min'], icon: '⚡' },
-  { title: 'Allergic Shock',steps: ['Use EpiPen if available','Call 108 immediately','Lay person flat, legs elevated','Loosen tight clothing','Stay with them until help arrives'], icon: '🚨' },
+  { title: 'Heart Attack',  steps: ['Call 108 immediately','Make person sit/lie comfortably','Loosen tight clothing','Give aspirin if available & not allergic','Do CPR if unconscious & not breathing'], icon: 'heart',         iconColor: '#EF4444' },
+  { title: 'Choking',       steps: ['Ask if they can cough','Encourage forceful coughing','Give 5 back blows between shoulder blades','5 abdominal thrusts (Heimlich)','Call 108 if not resolved'], icon: 'hand-left',     iconColor: '#F97316' },
+  { title: 'Bleeding',      steps: ['Apply firm pressure with clean cloth','Keep pressure for 10–15 minutes','Do not remove cloth — add more if needed','Elevate injured area above heart','Call 108 for severe bleeding'], icon: 'medkit',        iconColor: '#EC4899' },
+  { title: 'Burns',         steps: ['Cool with running water for 20 min','Do not use ice or butter','Cover with clean bandage','Do not pop blisters','Seek medical help for large burns'], icon: 'flame',         iconColor: '#F97316' },
+  { title: 'Seizure',       steps: ['Clear the area around person','Cushion their head','Do not restrain them','Turn on side if vomiting','Time the seizure — call 108 if > 5 min'], icon: 'flash',         iconColor: '#F59E0B' },
+  { title: 'Allergic Shock',steps: ['Use EpiPen if available','Call 108 immediately','Lay person flat, legs elevated','Loosen tight clothing','Stay with them until help arrives'], icon: 'alert-circle',  iconColor: '#DC2626' },
 ];
 
 export default function EmergencySOSScreen({ navigation }) {
@@ -29,9 +29,11 @@ export default function EmergencySOSScreen({ navigation }) {
   const T = getTheme(isDark);
   const [expandedFirst, setExpandedFirst] = useState(null);
   const [sosActive, setSosActive] = useState(false);
+  const [called, setCalled] = useState(false);
   const pulseAnim = useRef(new Animated.Value(1)).current;
+  const loopRef   = useRef(null);
 
-  // Pulsing animation for SOS button
+  // Pulsing animation for SOS button — stops once 108 is called
   useEffect(() => {
     const loop = Animated.loop(
       Animated.sequence([
@@ -39,6 +41,7 @@ export default function EmergencySOSScreen({ navigation }) {
         Animated.timing(pulseAnim, { toValue: 1,    duration: 700, useNativeDriver: true }),
       ])
     );
+    loopRef.current = loop;
     loop.start();
     return () => loop.stop();
   }, []);
@@ -55,6 +58,9 @@ export default function EmergencySOSScreen({ navigation }) {
   const directCall108 = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     Vibration.vibrate([0, 200, 100, 200]);
+    loopRef.current?.stop();
+    Animated.timing(pulseAnim, { toValue: 1, duration: 200, useNativeDriver: true }).start();
+    setCalled(true);
     Linking.openURL('tel:108');
   };
 
@@ -133,7 +139,9 @@ export default function EmergencySOSScreen({ navigation }) {
           <TouchableOpacity key={i} style={[styles.firstAidCard, { backgroundColor: T.card }]}
             onPress={() => setExpandedFirst(expandedFirst === i ? null : i)} activeOpacity={0.88}>
             <View style={styles.firstAidHeader}>
-              <Text style={{ fontSize: 24 }}>{item.icon}</Text>
+              <View style={[styles.firstAidIconBox, { backgroundColor: item.iconColor + '18' }]}>
+                <Ionicons name={item.icon} size={20} color={item.iconColor} />
+              </View>
               <Text style={[styles.firstAidTitle, { color: T.text }]}>{item.title}</Text>
               <Ionicons name={expandedFirst === i ? 'chevron-up' : 'chevron-down'} size={18} color={T.textMuted} />
             </View>
@@ -177,6 +185,7 @@ const styles = StyleSheet.create({
   numNumber: { fontSize: 16, fontFamily: 'Nunito_900Black' },
   firstAidCard: { borderRadius: 16, padding: 16, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 8, elevation: 2 },
   firstAidHeader: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  firstAidIconBox: { width: 38, height: 38, borderRadius: 11, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
   firstAidTitle: { flex: 1, fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
   stepRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
   stepNum: { width: 22, height: 22, borderRadius: 11, backgroundColor: '#DC2626', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 },

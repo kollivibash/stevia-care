@@ -24,21 +24,21 @@ const getModules = (s) => [
   { id: 'tracker', title: s('periodTracker'),       sub: s('periodTrackerSub'),      icon: 'heart',               colors: ['#9D174D','#EC4899'], bg: '#FCE7F3', ic: '#EC4899', tag: 'Wellness',  nav: 'TrackerHome'      },
   { id: 'vitals',  title: s('vitalsBMI'),           sub: s('vitalsBMISub'),          icon: 'pulse',               colors: ['#065F46','#16A34A'], bg: '#DCFCE7', ic: '#16A34A', tag: 'Track',     nav: 'VitalsHome'       },
   { id: 'history', title: s('reportHistory'),       sub: s('reportHistorySub'),      icon: 'time',                colors: ['#0F172A','#1E293B'], bg: '#F1F5F9', ic: '#475569', tag: 'History',   nav: 'LabHistory'       },
-  { id: 'cg',      title: s('caregiverMode'),       sub: s('caregiverModeSub'),      icon: 'people-circle',       colors: ['#7C2D12','#EA580C'], bg: '#FFF7ED', ic: '#EA580C', tag: '🔥 New',    nav: 'CaregiverMode'    },
-  { id: 'doctor',  title: 'Book a Doctor',          sub: 'Verified specialists · Instant booking', icon: 'medical-outline', colors: ['#0C4A6E','#0EA5E9'], bg: '#E0F2FE', ic: '#0EA5E9', tag: '🔥 New', nav: 'DoctorBooking'  },
+  { id: 'cg',      title: s('caregiverMode'),       sub: s('caregiverModeSub'),      icon: 'people-circle',       colors: ['#7C2D12','#EA580C'], bg: '#FFF7ED', ic: '#EA580C', tag: 'New',       nav: 'CaregiverMode'    },
+  { id: 'doctor',  title: 'Book a Doctor',          sub: 'Verified specialists · Instant booking', icon: 'medical-outline', colors: ['#0C4A6E','#0EA5E9'], bg: '#E0F2FE', ic: '#0EA5E9', tag: 'New',    nav: 'DoctorBooking'  },
   { id: 'abha',    title: 'ABHA Health ID',          sub: 'Govt health account · Nationwide records', icon: 'id-card',      colors: ['#1E3A5F','#1D4ED8'], bg: '#DBEAFE', ic: '#1D4ED8', tag: 'Govt',      nav: 'ABHAScreen'       },
   { id: 'timeline',title: 'Health Timeline',         sub: 'Your complete medical history',           icon: 'time',          colors: ['#0F172A','#374151'], bg: '#F1F5F9', ic: '#475569', tag: 'Records',   nav: 'HealthTimeline'   },
   { id: 'sos',     title: s('emergencySOS'),        sub: s('emergencySOSSub'),       icon: 'alert-circle',        colors: ['#7F1D1D','#DC2626'], bg: '#FEE2E2', ic: '#DC2626', tag: 'SOS',       nav: 'EmergencySOS'     },
 ];
 
 const COMING = [
-  { icon: '🏥', label: 'Nearby Hospitals', color: '#EF4444' },
-  { icon: '🍎', label: 'Diet Tracker',     color: '#F59E0B' },
-  { icon: '🏃', label: 'Fitness Tracker',  color: '#8B5CF6' },
-  { icon: '😴', label: 'Sleep Tracker',    color: '#7C3AED' },
-  { icon: '📍', label: 'Doctor Nearby',    color: '#EC4899' },
-  { icon: '⚡', label: '10 Min Medicine',  color: '#16A34A' },
-  { icon: '🧬', label: 'Genetic Health',   color: '#10B981' },
+  { icon: 'business-outline',    label: 'Nearby Hospitals', color: '#EF4444' },
+  { icon: 'nutrition-outline',   label: 'Diet Tracker',     color: '#F59E0B' },
+  { icon: 'walk-outline',        label: 'Fitness Tracker',  color: '#8B5CF6' },
+  { icon: 'moon-outline',        label: 'Sleep Tracker',    color: '#7C3AED' },
+  { icon: 'navigate-outline',    label: 'Doctor Nearby',    color: '#EC4899' },
+  { icon: 'flash-outline',       label: '10 Min Medicine',  color: '#16A34A' },
+  { icon: 'analytics-outline',   label: 'Genetic Health',   color: '#10B981' },
 ];
 
 export default function HealthHubScreen({ navigation }) {
@@ -123,7 +123,7 @@ export default function HealthHubScreen({ navigation }) {
               {COMING.map((c, i) => (
                 <View key={i} style={styles.comingItem}>
                   <View style={[styles.comingIconBox, { backgroundColor: c.color + '18' }]}>
-                    <Text style={{ fontSize: 20 }}>{c.icon}</Text>
+                    <Ionicons name={c.icon} size={20} color={c.color} />
                   </View>
                   <Text style={styles.comingLabel}>{c.label}</Text>
                 </View>

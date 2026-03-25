@@ -137,7 +137,7 @@ export default function VitalsScreen({ navigation }) {
           </View>
         ) : latest ? (
           <View style={styles.bmiCard}>
-            <Text style={styles.bmiLabel}>Last Entry — {new Date(latest.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</Text>
+            <Text style={styles.bmiLabel}>Last Entry — {latest.date ? new Date(latest.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : 'Recent'}</Text>
             <View style={styles.latestRow}>
               {['weight','systolic','pulse','spo2'].filter(k => latest[k]).map(k=>(
                 <View key={k} style={styles.latestItem}>
@@ -185,7 +185,7 @@ export default function VitalsScreen({ navigation }) {
             {vitalsLog.slice(0, 10).map((entry, i) => (
               <View key={i} style={[styles.historyCard, { backgroundColor: T.card }]}>
                 <View style={[styles.historyDate, { backgroundColor: '#DCFCE7' }]}>
-                  <Text style={styles.historyDateText}>{new Date(entry.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</Text>
+                  <Text style={styles.historyDateText}>{entry.date ? new Date(entry.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : 'Recent'}</Text>
                 </View>
                 <View style={{ flex: 1 }}>
                   <View style={styles.historyValues}>
@@ -196,7 +196,12 @@ export default function VitalsScreen({ navigation }) {
                     ))}
                   </View>
                   {entry.bmi && <Text style={[styles.historyBMI, { color: T.textMuted }]}>BMI: {entry.bmi}</Text>}
-                  {entry.note ? <Text style={[styles.historyNote, { color: T.textMuted }]}>📝 {entry.note}</Text> : null}
+                  {entry.note ? (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                      <Ionicons name="create-outline" size={11} color={T.textMuted} />
+                      <Text style={[styles.historyNote, { color: T.textMuted }]}>{entry.note}</Text>
+                    </View>
+                  ) : null}
                 </View>
               </View>
             ))}

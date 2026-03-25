@@ -16,6 +16,24 @@ import { useHealthStore } from '../../store/healthStore';
 import { useThemeStore, getTheme, tr } from '../../store/themeStore';
 import appJson from '../../../app.json';
 
+function calcHealthScore({ vitalsLog, labReports, reminders, adherenceLogs, familyMembers }) {
+  let score = 65;
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  if ((vitalsLog || []).some(v => new Date(v.date || 0).getTime() > sevenDaysAgo)) score += 10;
+  if ((labReports || []).length > 0) score += 5;
+  const lastLab = (labReports || [])[0];
+  if (lastLab?.result && (lastLab.result.critical_alerts || []).length === 0) score += 5;
+  const taken   = (adherenceLogs || []).filter(l => l.action === 'taken').length;
+  const skipped = (adherenceLogs || []).filter(l => l.action === 'skipped').length;
+  const total   = taken + skipped;
+  if (total > 0 && taken / total >= 0.8) score += 5;
+  if ((familyMembers || []).length > 0) score += 5;
+  const latestV = (vitalsLog || [])[0];
+  if (latestV?.bmi && parseFloat(latestV.bmi) >= 30) score -= 5;
+  if (latestV?.systolic && parseInt(latestV.systolic) > 140) score -= 3;
+  return Math.min(100, Math.max(30, score));
+}
+
 const APP_VERSION = appJson?.expo?.version || '1.0.0';
 
 const LANGUAGES = [
@@ -51,19 +69,20 @@ function MenuRow({ icon, iconBg, label, sub, right, onPress, danger }) {
 
 export default function ProfileScreen({ navigation }) {
   const { user, logout } = useAuthStore();
-  const { reminders, labReports, familyMembers } = useHealthStore();
+  const { reminders, labReports, familyMembers, vitalsLog, adherenceLogs } = useHealthStore();
   const { isDark, setDark, language, languageCode, setLanguage } = useThemeStore();
   const T = getTheme(isDark);
   const s = tr(languageCode);
   const [notifOn, setNotifOn] = useState(true);
   const [showLang, setShowLang] = useState(false);
+  const healthScore = calcHealthScore({ vitalsLog, labReports, reminders, adherenceLogs, familyMembers });
 
   const handleLanguage = async (lang) => {
     await setLanguage(lang.label, lang.code);
     setShowLang(false);
     // Show alert in the NEW language immediately
     const newS = tr(lang.code);
-    Alert.alert(`🌐 ${newS('languageUpdated')}`, `${newS('languageUpdatedMsg')} ${lang.native}`);
+    Alert.alert(newS('languageUpdated'), `${newS('languageUpdatedMsg')} ${lang.native}`);
   };
 
   const handleLogout = () => {
@@ -119,18 +138,18 @@ export default function ProfileScreen({ navigation }) {
             <View style={{ flex: 1 }}>
               <Text style={styles.scoreBarLabel}>Health Score</Text>
               <View style={styles.scoreBarTrack}>
-                <View style={[styles.scoreBarFill, { width: '78%' }]} />
+                <View style={[styles.scoreBarFill, { width: `${healthScore}%` }]} />
               </View>
               <Text style={styles.scoreBarSub}>Based on your profile and activity</Text>
             </View>
-            <Text style={styles.scoreBarNum}>78</Text>
+            <Text style={styles.scoreBarNum}>{healthScore}</Text>
           </View>
         </LinearGradient>
 
         <View style={{ padding: 16 }}>
 
           {/* ── BetterHelp-style Premium Upgrade Card ── */}
-          <TouchableOpacity activeOpacity={0.9}>
+          <TouchableOpacity activeOpacity={0.9} onPress={() => Alert.alert('Stevia Pro', 'Premium features are coming soon! Unlimited AI, family plans, and PDF exports will be available shortly.')}>
             <LinearGradient colors={['#1E1B4B','#3730A3','#6366F1']} style={styles.premCard}>
               <View style={styles.premOrb} />
               <View style={{ flex: 1 }}>

@@ -84,6 +84,10 @@ export default function RemindersScreen({ navigation }) {
     if (!memberName.trim() || !medName.trim()) {
       Alert.alert('Missing Info', 'Please enter member name and medicine name.'); return;
     }
+    const timeRegex = /^([0-1]?\d|2[0-3]):([0-5]\d)$/;
+    if (!timeRegex.test(medTime)) {
+      Alert.alert('Invalid Time', 'Please enter time in HH:MM format (e.g. 08:00 or 14:30).'); return;
+    }
     const medicine = {
       name:       medName.trim(),
       dose:       medDose.trim(),
@@ -163,7 +167,7 @@ export default function RemindersScreen({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate('HandwrittenRx')} activeOpacity={0.88}>
           <LinearGradient colors={['#14532D','#16A34A']} style={styles.aiBanner}>
             <Ionicons name="camera" size={20} color="#fff" />
-            <Text style={styles.aiBannerText}>📷 Scan Prescription with AI</Text>
+            <Text style={styles.aiBannerText}>Scan Prescription with AI</Text>
             <Ionicons name="chevron-forward" size={18} color="rgba(255,255,255,0.7)" />
           </LinearGradient>
         </TouchableOpacity>
