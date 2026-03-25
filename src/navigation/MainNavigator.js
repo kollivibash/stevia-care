@@ -37,6 +37,9 @@ import EmergencySOSScreen      from '../screens/Emergency/EmergencySOSScreen';
 import DrugInteractionScreen  from '../screens/DrugInteraction/DrugInteractionScreen';
 import HandwrittenRxScreen    from '../screens/Prescription/HandwrittenRxScreen';
 import CaregiverScreen        from '../screens/Caregiver/CaregiverScreen';
+import DoctorBookingScreen    from '../screens/Doctors/DoctorBookingScreen';
+import ABHAScreen             from '../screens/ABHA/ABHAScreen';
+import HealthTimelineScreen   from '../screens/Health/HealthTimelineScreen';
 
 const Tab   = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -67,6 +70,9 @@ function HealthStack() {
       <Stack.Screen name="DrugInteraction"   component={DrugInteractionScreen} />
       <Stack.Screen name="HandwrittenRx"     component={HandwrittenRxScreen} />
       <Stack.Screen name="CaregiverMode"     component={CaregiverScreen} />
+      <Stack.Screen name="DoctorBooking"     component={DoctorBookingScreen} />
+      <Stack.Screen name="ABHAScreen"        component={ABHAScreen} />
+      <Stack.Screen name="HealthTimeline"    component={HealthTimelineScreen} />
     </Stack.Navigator>
   );
 }
