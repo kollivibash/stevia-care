@@ -16,7 +16,8 @@
       "bundleIdentifier": "com.steviacare.app",
       "infoPlist": {
         "NSCameraUsageDescription": "To capture lab reports and prescriptions",
-        "NSPhotoLibraryUsageDescription": "To upload lab reports and prescriptions"
+        "NSPhotoLibraryUsageDescription": "To upload lab reports and prescriptions",
+        "UIBackgroundModes": ["fetch", "remote-notification"]
       }
     },
     "android": {
@@ -32,11 +33,10 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.VIBRATE",
         "android.permission.RECORD_AUDIO",
-        "android.permission.CAMERA",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.VIBRATE",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.USE_EXACT_ALARM"
       ]
     },
     "plugins": [
@@ -53,7 +53,17 @@
           "iCloudContainerEnvironment": "Production"
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#14532D",
+          "sounds": [],
+          "androidMode": "default",
+          "androidCollapsedTitle": "#{unread_notifications} new interactions"
+        }
+      ]
     ],
     "extra": {
       "eas": {

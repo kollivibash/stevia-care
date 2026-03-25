@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, TextInput, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, TextInput, Modal, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { useHealthStore } from '../../store/healthStore';
+import { useAuthStore } from '../../store/authStore';
 import { useThemeStore, getTheme } from '../../store/themeStore';
+import { scheduleMedicineReminder, cancelReminder, scheduleSnoozedReminder, requestPermissions } from '../../services/notificationService';
 
 const TIME_SLOTS = [
-  { key: 'morning',   label: 'Morning',   icon: '🌅', hours: [5,6,7,8,9,10,11] },
-  { key: 'afternoon', label: 'Afternoon', icon: '☀️', hours: [12,13,14,15,16] },
-  { key: 'evening',   label: 'Evening',   icon: '🌆', hours: [17,18,19,20] },
-  { key: 'night',     label: 'Night',     icon: '🌙', hours: [21,22,23,0,1,2,3,4] },
+  { key: 'morning',   label: 'Morning',   ionicon: 'sunny',        color: '#F59E0B', hours: [5,6,7,8,9,10,11] },
+  { key: 'afternoon', label: 'Afternoon', ionicon: 'partly-sunny', color: '#F97316', hours: [12,13,14,15,16] },
+  { key: 'evening',   label: 'Evening',   ionicon: 'cloudy-night', color: '#8B5CF6', hours: [17,18,19,20] },
+  { key: 'night',     label: 'Night',     ionicon: 'moon',         color: '#1D4ED8', hours: [21,22,23,0,1,2,3,4] },
 ];
 
 const MED_COLORS = ['#16A34A','#F59E0B','#EF4444','#8B5CF6','#0EA5E9','#EC4899'];
 
 export default function RemindersScreen({ navigation }) {
   const { reminders, addReminder, deleteReminder, adherenceLogs, logAdherence } = useHealthStore();
+  const { token } = useAuthStore();
   const { isDark } = useThemeStore();
   const T = getTheme(isDark);
 
@@ -50,20 +54,57 @@ export default function RemindersScreen({ navigation }) {
   };
 
   const handleLog = (med, action) => {
+    Haptics.impactAsync(action === 'taken' ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light);
     logAdherence({ medicineName: med.name, memberName: med.memberName, action, time: med.times?.[0] || med.time });
-    Alert.alert(action === 'taken' ? '✅ Marked Taken' : '⏭ Skipped', `${med.name} marked as ${action}`);
+    if (action === 'taken') {
+      Alert.alert('Taken', `${med.name} marked as taken.`);
+    } else {
+      // Offer snooze when skipping
+      Alert.alert('Skipped', `${med.name} skipped.`, [
+        { text: 'OK', style: 'cancel' },
+        {
+          text: 'Remind in 30 min',
+          onPress: async () => {
+            await scheduleSnoozedReminder(med, 30);
+            Alert.alert('Snoozed', `We will remind you again in 30 minutes.`);
+          },
+        },
+        {
+          text: 'Remind in 1 hour',
+          onPress: async () => {
+            await scheduleSnoozedReminder(med, 60);
+            Alert.alert('Snoozed', `We will remind you again in 1 hour.`);
+          },
+        },
+      ]);
+    }
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!memberName.trim() || !medName.trim()) {
       Alert.alert('Missing Info', 'Please enter member name and medicine name.'); return;
     }
-    addReminder({
+    const medicine = {
+      name:       medName.trim(),
+      dose:       medDose.trim(),
+      times:      [medTime],
+      color:      MED_COLORS[Math.floor(Math.random() * MED_COLORS.length)],
       memberName: memberName.trim(),
-      medicines: [{ name: medName.trim(), dose: medDose.trim(), times: [medTime], color: MED_COLORS[Math.floor(Math.random()*MED_COLORS.length)] }],
-    });
+    };
+    // Schedule notification — request permission first
+    const granted = await requestPermissions();
+    const notifId = granted ? await scheduleMedicineReminder(medicine) : null;
+
+    addReminder(
+      { memberName: memberName.trim(), medicines: [{ ...medicine, notifId }] },
+      token,
+    );
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setMemberName(''); setMedName(''); setMedDose(''); setMedTime('08:00');
     setShowAdd(false);
+    if (granted) {
+      Alert.alert('Reminder Set', `You will be notified daily at ${medTime} for ${medName.trim()}.`);
+    }
   };
 
   const totalTaken  = adherenceLogs.filter(l => l.action === 'taken').length;
@@ -110,8 +151,8 @@ export default function RemindersScreen({ navigation }) {
         {TIME_SLOTS.map(slot => (
           <TouchableOpacity key={slot.key} style={[styles.slotTab, activeSlot === slot.key && styles.slotTabActive]}
             onPress={() => setActiveSlot(slot.key)}>
-            <Text style={styles.slotIcon}>{slot.icon}</Text>
-            <Text style={[styles.slotLabel, { color: activeSlot === slot.key ? '#F59E0B' : T.textMuted }]}>{slot.label}</Text>
+            <Ionicons name={slot.ionicon} size={16} color={activeSlot === slot.key ? slot.color : T.textMuted} />
+            <Text style={[styles.slotLabel, { color: activeSlot === slot.key ? slot.color : T.textMuted }]}>{slot.label}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -130,13 +171,15 @@ export default function RemindersScreen({ navigation }) {
         {/* Slot medicines */}
         {slotMeds.length === 0 ? (
           <View style={[styles.empty, { backgroundColor: T.card }]}>
-            <Text style={{ fontSize: 40 }}>💊</Text>
+            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#FEF3C7', alignItems: 'center', justifyContent: 'center', marginBottom: 4 }}>
+              <Ionicons name="medical" size={34} color="#F59E0B" />
+            </View>
             <Text style={[styles.emptyTitle, { color: T.text }]}>No medicines for {activeSlot}</Text>
             <Text style={[styles.emptySub, { color: T.textMuted }]}>Tap + to add a medicine reminder</Text>
           </View>
         ) : (
           <>
-            <Text style={[styles.sectionTitle, { color: T.text }]}>{TIME_SLOTS.find(s=>s.key===activeSlot)?.icon} {TIME_SLOTS.find(s=>s.key===activeSlot)?.label} Medicines</Text>
+            <Text style={[styles.sectionTitle, { color: T.text }]}>{TIME_SLOTS.find(s=>s.key===activeSlot)?.label} Medicines</Text>
             {slotMeds.map((med, i) => (
               <View key={i} style={[styles.medCard, { backgroundColor: T.card, borderLeftColor: med.color || '#16A34A' }]}>
                 <View style={{ flex: 1 }}>
@@ -171,7 +214,13 @@ export default function RemindersScreen({ navigation }) {
                   <Text style={[styles.memberMedCount, { color: T.textMuted }]}>{rem.medicines.length} medicine{rem.medicines.length !== 1 ? 's' : ''}</Text>
                   <TouchableOpacity onPress={() => Alert.alert('Delete?', `Remove all reminders for ${rem.memberName}?`, [
                     { text: 'Cancel', style: 'cancel' },
-                    { text: 'Delete', style: 'destructive', onPress: () => deleteReminder(rem.id) },
+                    { text: 'Delete', style: 'destructive', onPress: async () => {
+                      // Cancel all notifications for this member's medicines
+                      for (const m of rem.medicines || []) {
+                        if (m.notifId) await cancelReminder(m.notifId);
+                      }
+                      deleteReminder(rem.id, token);
+                    }},
                   ])}>
                     <Ionicons name="trash-outline" size={18} color="#EF4444" />
                   </TouchableOpacity>

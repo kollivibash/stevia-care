@@ -3,8 +3,43 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert,
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { useHealthStore } from '../../store/healthStore';
+import { useAuthStore } from '../../store/authStore';
 import { useThemeStore, getTheme } from '../../store/themeStore';
+
+// Valid medical ranges for each vital
+const VALID_RANGES = {
+  weight:      { min: 20,    max: 300,    label: 'Weight (20–300 kg)' },
+  height:      { min: 100,   max: 250,    label: 'Height (100–250 cm)' },
+  systolic:    { min: 60,    max: 220,    label: 'Systolic BP (60–220 mmHg)' },
+  diastolic:   { min: 40,    max: 140,    label: 'Diastolic BP (40–140 mmHg)' },
+  pulse:       { min: 30,    max: 220,    label: 'Heart Rate (30–220 bpm)' },
+  sugar:       { min: 30,    max: 600,    label: 'Blood Sugar (30–600 mg/dL)' },
+  spo2:        { min: 60,    max: 100,    label: 'SpO2 (60–100%)' },
+  temp:        { min: 90,    max: 115,    label: 'Temperature (90–115°F)' },
+  steps:       { min: 0,     max: 100000, label: 'Steps (0–100,000)' },
+  sleep:       { min: 0,     max: 24,     label: 'Sleep (0–24 hrs)' },
+  water:       { min: 0,     max: 15,     label: 'Water (0–15 L)' },
+  calories:    { min: 0,     max: 10000,  label: 'Calories (0–10,000 kcal)' },
+  cholesterol: { min: 50,    max: 500,    label: 'Cholesterol (50–500 mg/dL)' },
+  waist:       { min: 40,    max: 200,    label: 'Waist (40–200 cm)' },
+  stress:      { min: 1,     max: 10,     label: 'Stress Level (1–10)' },
+};
+
+function validateVitals(values) {
+  const errors = [];
+  for (const [key, val] of Object.entries(values)) {
+    if (!val || !val.trim()) continue;
+    const num = parseFloat(val);
+    if (isNaN(num)) { errors.push(`${key}: not a valid number`); continue; }
+    const range = VALID_RANGES[key];
+    if (range && (num < range.min || num > range.max)) {
+      errors.push(`${range.label}`);
+    }
+  }
+  return errors;
+}
 
 const VITALS = [
   { key: 'weight',    label: 'Weight',        unit: 'kg',    icon: 'barbell',         color: '#16A34A', normal: '50–90 kg',     placeholder: '70' },
@@ -35,6 +70,7 @@ function calcBMI(weight, height) {
 
 export default function VitalsScreen({ navigation }) {
   const { vitalsLog, addVitalsEntry } = useHealthStore();
+  const { token } = useAuthStore();
   const { isDark } = useThemeStore();
   const T = getTheme(isDark);
   const [values, setValues] = useState({});
@@ -45,12 +81,25 @@ export default function VitalsScreen({ navigation }) {
   const latest = vitalsLog[0];
 
   const handleSave = () => {
-    const filled = Object.entries(values).filter(([,v]) => v.trim());
+    const filled = Object.entries(values).filter(([,v]) => v && v.trim());
     if (filled.length === 0) { Alert.alert('Nothing to save', 'Enter at least one vital.'); return; }
+
+    // Validate ranges
+    const errors = validateVitals(values);
+    if (errors.length > 0) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      Alert.alert(
+        'Invalid Values',
+        `Please check these values:\n\n${errors.map(e => `• ${e}`).join('\n')}`,
+      );
+      return;
+    }
+
     const entry = { ...Object.fromEntries(filled), note: note.trim(), date: new Date().toISOString(), bmi: bmi?.value };
-    addVitalsEntry(entry);
+    addVitalsEntry(entry, token);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setValues({}); setNote(''); setShowLog(false);
-    Alert.alert('✅ Saved', 'Vitals logged successfully!');
+    Alert.alert('Saved', 'Vitals logged successfully!');
   };
 
   return (

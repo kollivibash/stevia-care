@@ -110,11 +110,11 @@ export default function TrackerScreen({ navigation }) {
 
   // Phase
   const getPhase = () => {
-    if (!lastCycle)               return { name: 'Unknown',   color: '#94A3B8', desc: 'Log your first period to see your phase.',        emoji: '❓' };
-    if (cycleDay >= 1  && cycleDay <= 5)  return { name: 'Menstrual',  color: PINK,      desc: 'Period is active. Rest and stay hydrated.',       emoji: '🩸' };
-    if (cycleDay >= 6  && cycleDay <= 13) return { name: 'Follicular', color: '#F59E0B', desc: 'Energy rising! Great time for new projects.',      emoji: '🌱' };
-    if (cycleDay >= 14 && cycleDay <= 16) return { name: 'Ovulation',  color: '#10B981', desc: 'Peak fertility window. High energy and confidence.', emoji: '🌸' };
-    return                               { name: 'Luteal',     color: '#8B5CF6', desc: 'Progesterone rising. You may feel introspective.',  emoji: '🌙' };
+    if (!lastCycle)               return { name: 'Unknown',   color: '#94A3B8', desc: 'Log your first period to see your phase.',           icon: 'help-circle', iconColor: '#94A3B8' };
+    if (cycleDay >= 1  && cycleDay <= 5)  return { name: 'Menstrual',  color: PINK,      desc: 'Period is active. Rest and stay hydrated.',          icon: 'water',       iconColor: PINK      };
+    if (cycleDay >= 6  && cycleDay <= 13) return { name: 'Follicular', color: '#F59E0B', desc: 'Energy rising! Great time for new projects.',         icon: 'leaf',        iconColor: '#F59E0B' };
+    if (cycleDay >= 14 && cycleDay <= 16) return { name: 'Ovulation',  color: '#10B981', desc: 'Peak fertility window. High energy and confidence.',  icon: 'flower',      iconColor: '#10B981' };
+    return                               { name: 'Luteal',     color: '#8B5CF6', desc: 'Progesterone rising. You may feel introspective.',   icon: 'moon',        iconColor: '#8B5CF6' };
   };
   const phase = getPhase();
 
@@ -220,7 +220,10 @@ export default function TrackerScreen({ navigation }) {
           {/* Phase card */}
           <View style={styles.phaseCard}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.phaseName}>{phase.emoji}  {phase.name} Phase</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                <Ionicons name={phase.icon} size={16} color={phase.iconColor} />
+                <Text style={styles.phaseName}>{phase.name} Phase</Text>
+              </View>
               <Text style={styles.phaseDesc}>{phase.desc}</Text>
               {cycleDay > 0 && <Text style={styles.cycleDay}>Day {cycleDay} of your cycle</Text>}
             </View>
@@ -262,14 +265,37 @@ export default function TrackerScreen({ navigation }) {
             </View>
             <View style={{ width: 1, height: 36, backgroundColor: T.border, marginHorizontal: 12 }} />
             <View style={styles.fertileItem}>
-              <Text style={{ fontSize: 18 }}>🌸</Text>
+              <Ionicons name="flower" size={18} color="#10B981" />
               <View>
                 <Text style={[styles.fertileLabel, { color: T.textMuted }]}>Ovulation</Text>
-                <Text style={[styles.fertileDate, { color: T.text }]}>{format(ovulationDay, 'dd MMM yyyy')}</Text>
+                <Text style={[styles.fertileDate, { color: T.text }]}>
+                  {lastCycle ? format(ovulationDay, 'dd MMM yyyy') : 'Log a cycle first'}
+                </Text>
               </View>
             </View>
           </View>
         </View>
+
+        {/* FIRST-TIME GUIDE — shown only when no cycles logged */}
+        {periodCycles.length === 0 && (
+          <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
+            <View style={{ backgroundColor: '#FDF2F8', borderRadius: 18, padding: 18, borderWidth: 1.5, borderColor: PINK + '40' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                <View style={{ width: 36, height: 36, borderRadius: 10, backgroundColor: PINK + '18', alignItems: 'center', justifyContent: 'center' }}>
+                  <Ionicons name="information-circle" size={22} color={PINK} />
+                </View>
+                <Text style={{ fontSize: 15, fontFamily: 'Nunito_800ExtraBold', color: PINK2 }}>Getting Started</Text>
+              </View>
+              <Text style={{ fontSize: 13, fontFamily: 'Nunito_400Regular', color: '#6B7280', lineHeight: 20, marginBottom: 14 }}>
+                Tap a date on the calendar below to log your period, or use the + button in the header. Log at least 2 cycles for accurate predictions.
+              </Text>
+              <TouchableOpacity onPress={() => openNew(format(today, 'yyyy-MM-dd'))}
+                style={{ backgroundColor: PINK, borderRadius: 12, paddingVertical: 11, alignItems: 'center' }}>
+                <Text style={{ color: '#fff', fontFamily: 'Nunito_800ExtraBold', fontSize: 14 }}>Log Today as Period Start</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
         {/* CALENDAR */}
         <View style={{ paddingHorizontal: 16, marginTop: 16 }}>

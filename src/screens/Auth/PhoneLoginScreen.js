@@ -302,10 +302,10 @@ export default function PhoneLoginScreen({ navigation }) {
                       </TouchableOpacity>
                     </View>
 
-                    {devOtp ? (
+                    {__DEV__ && devOtp ? (
                       <View style={styles.devBanner}>
                         <Ionicons name="flash" size={14} color={C.gold} />
-                        <Text style={styles.devText}>Test code: <Text style={styles.devOtp}>{devOtp}</Text></Text>
+                        <Text style={styles.devText}>Dev only: <Text style={styles.devOtp}>{devOtp}</Text></Text>
                       </View>
                     ) : null}
 

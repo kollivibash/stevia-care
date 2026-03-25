@@ -77,12 +77,47 @@ function ActivityRing({ value, max, color, size = 44, strokeWidth = 5 }) {
   );
 }
 
+// ── Dynamic health score ──────────────────────────────────────────────────────
+function calcHealthScore({ vitalsLog, labReports, reminders, adherenceLogs, familyMembers }) {
+  let score = 65;
+
+  // +10 if vitals logged in the last 7 days
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  if ((vitalsLog || []).some(v => new Date(v.date || v.timestamp || 0).getTime() > sevenDaysAgo)) score += 10;
+
+  // +5 if lab reports exist
+  if ((labReports || []).length > 0) score += 5;
+
+  // +5 if last lab has no critical alerts
+  const lastLab = (labReports || [])[0];
+  if (lastLab?.result && (lastLab.result.critical_alerts || []).length === 0) score += 5;
+
+  // +5 medicine adherence bonus
+  const taken   = (adherenceLogs || []).filter(l => l.action === 'taken').length;
+  const skipped = (adherenceLogs || []).filter(l => l.action === 'skipped').length;
+  const total   = taken + skipped;
+  if (total > 0 && taken / total >= 0.8) score += 5;
+
+  // +5 family health tracked
+  if ((familyMembers || []).length > 0) score += 5;
+
+  // -5 if latest vitals show high BMI (obese)
+  const latestV = (vitalsLog || [])[0];
+  if (latestV?.bmi && parseFloat(latestV.bmi) >= 30) score -= 5;
+
+  // -3 if BP is high (systolic > 140)
+  if (latestV?.systolic && parseInt(latestV.systolic) > 140) score -= 3;
+
+  return Math.min(100, Math.max(30, score));
+}
+
 export default function DashboardScreen({ navigation }) {
   const { user } = useAuthStore();
-  const { reminders, labReports, familyMembers, vitalsLog } = useHealthStore();
+  const { reminders, labReports, familyMembers, vitalsLog, adherenceLogs } = useHealthStore();
   const { isDark, languageCode } = useThemeStore();
   const T = getTheme(isDark);
   const [showNotif, setShowNotif] = useState(false);
+  const healthScore = calcHealthScore({ vitalsLog, labReports, reminders, adherenceLogs, familyMembers });
   const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(24)).current;
 
@@ -148,7 +183,7 @@ export default function DashboardScreen({ navigation }) {
             <View style={styles.scoreCard}>
               <View style={{ flex: 1 }}>
                 <Text style={styles.scoreTitle}>{t(languageCode, 'healthScore')}</Text>
-                <Text style={styles.scoreNum}>78<Text style={styles.scoreOf}>/100</Text></Text>
+                <Text style={styles.scoreNum}>{healthScore}<Text style={styles.scoreOf}>/100</Text></Text>
                 <View style={styles.trendRow}>
                   <View style={styles.trendPill}>
                     <Ionicons name="trending-up" size={10} color="#4ADE80" />
@@ -158,7 +193,7 @@ export default function DashboardScreen({ navigation }) {
               </View>
               {/* Activity rings — Apple Health inspired */}
               <View style={styles.ringsWrap}>
-                <ActivityRing value={78} max={100} color="#4ADE80" size={80} strokeWidth={7} />
+                <ActivityRing value={healthScore} max={100} color="#4ADE80" size={80} strokeWidth={7} />
                 <View style={styles.ringsLegend}>
                   <View style={styles.legendRow}><View style={[styles.legendDot, { backgroundColor: '#4ADE80' }]} /><Text style={styles.legendTxt}>Health</Text></View>
                 </View>

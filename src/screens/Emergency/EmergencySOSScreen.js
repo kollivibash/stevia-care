@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Animated, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { useThemeStore, getTheme } from '../../store/themeStore';
 
 const EMERGENCY_NUMBERS = [
@@ -28,19 +29,42 @@ export default function EmergencySOSScreen({ navigation }) {
   const T = getTheme(isDark);
   const [expandedFirst, setExpandedFirst] = useState(null);
   const [sosActive, setSosActive] = useState(false);
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  // Pulsing animation for SOS button
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, { toValue: 1.06, duration: 700, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1,    duration: 700, useNativeDriver: true }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, []);
 
   const callNumber = (num) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Alert.alert(`Call ${num}?`, `This will dial emergency number ${num}.`, [
       { text: 'Cancel', style: 'cancel' },
       { text: `Call ${num}`, style: 'destructive', onPress: () => Linking.openURL(`tel:${num}`) },
     ]);
   };
 
+  // Direct dial 108 — no confirm dialog in real emergency
+  const directCall108 = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    Vibration.vibrate([0, 200, 100, 200]);
+    Linking.openURL('tel:108');
+  };
+
   const triggerSOS = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    Vibration.vibrate([0, 300, 100, 300, 100, 300]);
     setSosActive(true);
-    Alert.alert('🚨 SOS Triggered', 'Calling 108 — Ambulance\n\nIn a real emergency, your location would be shared with emergency contacts.', [
-      { text: 'Cancel SOS', style: 'cancel', onPress: () => setSosActive(false) },
-      { text: 'Call 108 Now', onPress: () => { Linking.openURL('tel:108'); setSosActive(false); } },
+    Alert.alert('SOS Triggered', 'Calling 108 — Ambulance', [
+      { text: 'Cancel', style: 'cancel', onPress: () => setSosActive(false) },
+      { text: 'Call 108 Now', style: 'destructive', onPress: () => { directCall108(); setSosActive(false); } },
     ]);
   };
 
@@ -61,16 +85,32 @@ export default function EmergencySOSScreen({ navigation }) {
 
       <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
 
-        {/* BIG SOS BUTTON */}
-        <TouchableOpacity onPress={triggerSOS} activeOpacity={0.85}>
-          <LinearGradient colors={sosActive ? ['#991B1B','#B91C1C'] : ['#DC2626','#EF4444']} style={styles.sosBtn}>
-            <View style={styles.sosInner}>
-              <Ionicons name="call" size={40} color="#fff" />
-              <Text style={styles.sosBtnText}>SOS</Text>
-              <Text style={styles.sosBtnSub}>Tap to call 108 Ambulance</Text>
+        {/* DIRECT 108 CALL — Prominent top button */}
+        <TouchableOpacity onPress={directCall108} activeOpacity={0.8} style={styles.directCallBtn}>
+          <View style={styles.directCallInner}>
+            <View style={styles.directCallIcon}>
+              <Ionicons name="call" size={26} color="#fff" />
             </View>
-          </LinearGradient>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.directCallTitle}>Call 108 — Ambulance</Text>
+              <Text style={styles.directCallSub}>Tap to call directly · No confirmation</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="rgba(255,255,255,0.7)" />
+          </View>
         </TouchableOpacity>
+
+        {/* BIG SOS BUTTON */}
+        <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
+          <TouchableOpacity onPress={triggerSOS} activeOpacity={0.85}>
+            <LinearGradient colors={sosActive ? ['#991B1B','#B91C1C'] : ['#DC2626','#EF4444']} style={styles.sosBtn}>
+              <View style={styles.sosInner}>
+                <Ionicons name="warning" size={40} color="#fff" />
+                <Text style={styles.sosBtnText}>SOS</Text>
+                <Text style={styles.sosBtnSub}>Hold for full emergency alert</Text>
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+        </Animated.View>
 
         {/* EMERGENCY NUMBERS */}
         <Text style={[styles.sectionTitle, { color: T.text }]}>Emergency Numbers</Text>
@@ -120,6 +160,11 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   headerTitle: { color: '#fff', fontSize: 24, fontFamily: 'Nunito_900Black' },
   headerSub: { color: 'rgba(255,255,255,0.65)', fontSize: 12, marginTop: 2, fontFamily: 'Nunito_400Regular' },
+  directCallBtn:   { backgroundColor: '#16A34A', borderRadius: 18, marginBottom: 14, shadowColor: '#16A34A', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 14, elevation: 8 },
+  directCallInner: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16 },
+  directCallIcon:  { width: 48, height: 48, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
+  directCallTitle: { color: '#fff', fontSize: 16, fontFamily: 'Nunito_900Black' },
+  directCallSub:   { color: 'rgba(255,255,255,0.75)', fontSize: 11, fontFamily: 'Nunito_600SemiBold', marginTop: 2 },
   sosBtn: { borderRadius: 24, marginBottom: 24, shadowColor: '#DC2626', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.35, shadowRadius: 20, elevation: 12 },
   sosInner: { alignItems: 'center', paddingVertical: 36, gap: 6 },
   sosBtnText: { color: '#fff', fontSize: 42, fontFamily: 'Nunito_900Black', letterSpacing: 4 },

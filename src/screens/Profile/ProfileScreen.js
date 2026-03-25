@@ -14,6 +14,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../store/authStore';
 import { useHealthStore } from '../../store/healthStore';
 import { useThemeStore, getTheme, tr } from '../../store/themeStore';
+import appJson from '../../../app.json';
+
+const APP_VERSION = appJson?.expo?.version || '1.0.0';
 
 const LANGUAGES = [
   { label: 'English',   code: 'en', native: 'English'    },
@@ -181,9 +184,9 @@ export default function ProfileScreen({ navigation }) {
 
           {/* App brand footer */}
           <View style={styles.footer}>
-            <Text style={{ fontSize: 20 }}>🌿</Text>
+            <Ionicons name="leaf" size={20} color="#16A34A" />
             <Text style={[styles.footerName, { color: T.text }]}>Stevia Care</Text>
-            <Text style={[styles.footerVer, { color: T.textMuted }]}>v1.0.0 · Made with ❤️ in India</Text>
+            <Text style={[styles.footerVer, { color: T.textMuted }]}>v{APP_VERSION} · Made with love in India</Text>
           </View>
         </View>
       </ScrollView>
