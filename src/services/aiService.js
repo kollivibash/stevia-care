@@ -68,11 +68,18 @@ function parseJSON(text) {
   }
 }
 
+// ── Language instruction helper ───────────────────────────────────────────
+function langInstruction(language) {
+  if (!language || language === 'English') return '';
+  return `IMPORTANT: All text values in your JSON response (summary, explanation, action, advice, etc.) must be written in ${language} language only. Keys remain in English.`;
+}
+
 // ── 1. LAB REPORT ANALYZER ───────────────────────────────────────────────
-export async function analyzeLabReport({ reportText, age, gender, conditions, medications }) {
+export async function analyzeLabReport({ reportText, age, gender, conditions, medications, language }) {
   const system = `You are MedLens, expert clinical pathologist AI for Indian patients.
 Analyze every single parameter with Indian standard reference ranges.
 GREEN = normal, YELLOW = borderline (within 20% of limit), RED = significantly abnormal.
+${langInstruction(language)}
 Respond ONLY in valid JSON, no markdown.`;
 
   const user = `Patient: ${age || 30}yo ${gender || 'unknown'}. Conditions: ${conditions || 'none'}. Meds: ${medications || 'none'}.
@@ -102,9 +109,11 @@ Never suggest stopping prescribed medicines. Add brief disclaimer for medical ad
 }
 
 // ── 3. SYMPTOM CHECKER ────────────────────────────────────────────────────
-export async function analyzeSymptoms({ symptoms, age, gender, existingConditions }) {
+export async function analyzeSymptoms({ symptoms, age, gender, existingConditions, language }) {
   const system = `You are a medical AI for Indian patients. Analyze symptoms carefully.
-Never diagnose definitively. Always recommend professional consultation. Respond ONLY in valid JSON.`;
+Never diagnose definitively. Always recommend professional consultation.
+${langInstruction(language)}
+Respond ONLY in valid JSON.`;
 
   const user = `Symptoms: ${symptoms.join(', ')}. Age: ${age || 'unknown'}, Gender: ${gender || 'unknown'}. Conditions: ${existingConditions || 'none'}.
 
@@ -132,8 +141,10 @@ Respond ONLY with JSON:
 }
 
 // ── 5. DRUG INTERACTIONS ──────────────────────────────────────────────────
-export async function checkDrugInteractions(medicines) {
-  const system = `You are a clinical pharmacist. Check drug interactions including Ayurvedic herbs. Respond ONLY in valid JSON.`;
+export async function checkDrugInteractions(medicines, language) {
+  const system = `You are a clinical pharmacist. Check drug interactions including Ayurvedic herbs.
+${langInstruction(language)}
+Respond ONLY in valid JSON.`;
 
   const user = `Check interactions between: ${medicines.join(', ')}
 

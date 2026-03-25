@@ -12,22 +12,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useHealthStore } from '../../store/healthStore';
-import { useThemeStore, getTheme } from '../../store/themeStore';
+import { useThemeStore, getTheme, tr } from '../../store/themeStore';
 
 const { width } = Dimensions.get('window');
 
-const MODULES = [
-  { id: 'lab',     title: 'Lab Analyzer',        sub: 'AI reads your blood reports',        icon: 'flask',               colors: ['#5B21B6','#7C3AED'], bg: '#EDE9FE', ic: '#7C3AED', tag: 'AI',        nav: 'LabHome'          },
-  { id: 'rx',      title: 'Prescription Reader',  sub: 'AI reads handwritten prescriptions', icon: 'document-text',       colors: ['#065F46','#16A34A'], bg: '#DCFCE7', ic: '#16A34A', tag: '🔥 New',    nav: 'HandwrittenRx'    },
-  { id: 'drug',    title: 'Drug Interactions',    sub: 'Check if medicines are safe',        icon: 'warning',             colors: ['#1E1B4B','#4F46E5'], bg: '#EEF2FF', ic: '#4F46E5', tag: '🔥 New',    nav: 'DrugInteraction'  },
-  { id: 'meds',    title: 'Medicine Tracker',     sub: 'Never miss a dose',                  icon: 'medical',             colors: ['#92400E','#F59E0B'], bg: '#FEF3C7', ic: '#F59E0B', tag: 'Reminders', nav: 'RemindersHome'    },
-  { id: 'symptom', title: 'Symptom Checker',      sub: 'AI diagnosis in 60 seconds',         icon: 'search-circle',       colors: ['#0C4A6E','#0EA5E9'], bg: '#E0F2FE', ic: '#0EA5E9', tag: 'AI',        nav: 'SymptomChecker'   },
-  { id: 'ai',      title: 'Ask Stevia AI',         sub: 'Health chat in your language',       icon: 'chatbubble-ellipses', colors: ['#3730A3','#6366F1'], bg: '#EEF2FF', ic: '#6366F1', tag: 'AI Chat',   nav: 'ChatScreen'       },
-  { id: 'tracker', title: 'Period Tracker',        sub: 'Cycle & PCOD management',            icon: 'heart',               colors: ['#9D174D','#EC4899'], bg: '#FCE7F3', ic: '#EC4899', tag: 'Wellness',  nav: 'TrackerHome'      },
-  { id: 'vitals',  title: 'Vitals & BMI',          sub: '15 vital signs tracked',             icon: 'pulse',               colors: ['#065F46','#16A34A'], bg: '#DCFCE7', ic: '#16A34A', tag: 'Track',     nav: 'VitalsHome'       },
-  { id: 'history', title: 'Report History',        sub: 'All past lab reports',               icon: 'time',                colors: ['#0F172A','#1E293B'], bg: '#F1F5F9', ic: '#475569', tag: 'History',   nav: 'LabHistory'       },
-  { id: 'cg',      title: 'Caregiver Mode',        sub: 'Manage parents health remotely',     icon: 'people-circle',       colors: ['#7C2D12','#EA580C'], bg: '#FFF7ED', ic: '#EA580C', tag: '🔥 New',    nav: 'CaregiverMode'    },
-  { id: 'sos',     title: 'Emergency SOS',          sub: 'One tap to call ambulance',          icon: 'alert-circle',        colors: ['#7F1D1D','#DC2626'], bg: '#FEE2E2', ic: '#DC2626', tag: 'SOS',       nav: 'EmergencySOS'     },
+const getModules = (s) => [
+  { id: 'lab',     title: s('labAnalyzer'),        sub: s('labAnalyzerSub'),        icon: 'flask',               colors: ['#5B21B6','#7C3AED'], bg: '#EDE9FE', ic: '#7C3AED', tag: 'AI',        nav: 'LabHome'          },
+  { id: 'rx',      title: s('prescriptionReader'),  sub: s('prescriptionReaderSub'), icon: 'document-text',       colors: ['#065F46','#16A34A'], bg: '#DCFCE7', ic: '#16A34A', tag: '🔥 New',    nav: 'HandwrittenRx'    },
+  { id: 'drug',    title: s('drugInteractions'),    sub: s('drugInteractionsSub'),   icon: 'warning',             colors: ['#1E1B4B','#4F46E5'], bg: '#EEF2FF', ic: '#4F46E5', tag: '🔥 New',    nav: 'DrugInteraction'  },
+  { id: 'meds',    title: s('medicineTracker'),     sub: s('medicineTrackerSub'),    icon: 'medical',             colors: ['#92400E','#F59E0B'], bg: '#FEF3C7', ic: '#F59E0B', tag: 'Reminders', nav: 'RemindersHome'    },
+  { id: 'symptom', title: s('symptomChecker'),      sub: s('symptomCheckerSub'),     icon: 'search-circle',       colors: ['#0C4A6E','#0EA5E9'], bg: '#E0F2FE', ic: '#0EA5E9', tag: 'AI',        nav: 'SymptomChecker'   },
+  { id: 'ai',      title: s('askStevia'),           sub: s('askSteviaSub'),          icon: 'chatbubble-ellipses', colors: ['#3730A3','#6366F1'], bg: '#EEF2FF', ic: '#6366F1', tag: 'AI Chat',   nav: 'ChatScreen'       },
+  { id: 'tracker', title: s('periodTracker'),       sub: s('periodTrackerSub'),      icon: 'heart',               colors: ['#9D174D','#EC4899'], bg: '#FCE7F3', ic: '#EC4899', tag: 'Wellness',  nav: 'TrackerHome'      },
+  { id: 'vitals',  title: s('vitalsBMI'),           sub: s('vitalsBMISub'),          icon: 'pulse',               colors: ['#065F46','#16A34A'], bg: '#DCFCE7', ic: '#16A34A', tag: 'Track',     nav: 'VitalsHome'       },
+  { id: 'history', title: s('reportHistory'),       sub: s('reportHistorySub'),      icon: 'time',                colors: ['#0F172A','#1E293B'], bg: '#F1F5F9', ic: '#475569', tag: 'History',   nav: 'LabHistory'       },
+  { id: 'cg',      title: s('caregiverMode'),       sub: s('caregiverModeSub'),      icon: 'people-circle',       colors: ['#7C2D12','#EA580C'], bg: '#FFF7ED', ic: '#EA580C', tag: '🔥 New',    nav: 'CaregiverMode'    },
+  { id: 'sos',     title: s('emergencySOS'),        sub: s('emergencySOSSub'),       icon: 'alert-circle',        colors: ['#7F1D1D','#DC2626'], bg: '#FEE2E2', ic: '#DC2626', tag: 'SOS',       nav: 'EmergencySOS'     },
 ];
 
 const COMING = [
@@ -42,8 +42,10 @@ const COMING = [
 
 export default function HealthHubScreen({ navigation }) {
   const { reminders, labReports, vitalsLog } = useHealthStore();
-  const { isDark } = useThemeStore();
+  const { isDark, languageCode } = useThemeStore();
   const T = getTheme(isDark);
+  const s = tr(languageCode);
+  const MODULES = getModules(s);
   const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
 

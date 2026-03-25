@@ -1,7 +1,10 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 
-// ── TRANSLATIONS ─────────────────────────────────────────────────────────────
+import { tr as trHelper } from '../constants/translations';
+export { tr } from '../constants/translations';
+
+// ── TRANSLATIONS (kept for backward compat) ───────────────────────────────────
 export const TRANSLATIONS = {
   en: {
     goodMorning: 'Good morning', goodAfternoon: 'Good afternoon', goodEvening: 'Good evening',

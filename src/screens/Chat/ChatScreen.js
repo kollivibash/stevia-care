@@ -13,25 +13,28 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { sendHealthChatMessage } from '../../services/aiService';
 import { useAuthStore } from '../../store/authStore';
-import { useThemeStore, getTheme } from '../../store/themeStore';
+import { useThemeStore, getTheme, tr } from '../../store/themeStore';
 
-const SUGGESTED = [
-  '🥗 What should I eat for high BP?',
-  '💊 How do I manage PCOD with diet?',
-  '😴 Why am I always tired?',
-  '🫀 Signs of vitamin D deficiency?',
-  '🏃 Best exercises for diabetes?',
-  '💧 How much water should I drink?',
-];
+const SUGGESTED_BY_LANG = {
+  hi: ['🥗 उच्च BP के लिए क्या खाएं?', '💊 PCOD को आहार से कैसे नियंत्रित करें?', '😴 मैं हमेशा थका हुआ क्यों रहता हूँ?', '🫀 विटामिन D की कमी के संकेत?', '🏃 मधुमेह के लिए सबसे अच्छे व्यायाम?', '💧 मुझे कितना पानी पीना चाहिए?'],
+  bn: ['🥗 উচ্চ BP-এর জন্য কী খাবেন?', '💊 PCOD কীভাবে নিয়ন্ত্রণ করবেন?', '😴 সবসময় ক্লান্ত লাগে কেন?', '🫀 ভিটামিন D-এর অভাবের লক্ষণ?', '🏃 ডায়াবেটিসের জন্য ব্যায়াম?', '💧 কতটুকু পানি পান করবেন?'],
+  ta: ['🥗 அதிக BP-க்கு என்ன சாப்பிட வேண்டும்?', '💊 PCOD-ஐ உணவால் கட்டுப்படுத்துவது எப்படி?', '😴 எப்போதும் சோர்வாக இருப்பது ஏன்?', '🫀 வைட்டமின் D குறைபாட்டின் அறிகுறிகள்?', '🏃 நீரிழிவுக்கான சிறந்த உடற்பயிற்சி?', '💧 எவ்வளவு தண்ணீர் குடிக்க வேண்டும்?'],
+  te: ['🥗 అధిక BP కోసం ఏమి తినాలి?', '💊 PCOD ని ఆహారంతో ఎలా నిర్వహించాలి?', '😴 నేను ఎప్పుడూ అలసిపోతున్నాను ఎందుకు?', '🫀 విటమిన్ D లోపం సంకేతాలు?', '🏃 మధుమేహానికి ఉత్తమ వ్యాయామాలు?', '💧 నేను ఎంత నీరు తాగాలి?'],
+  mr: ['🥗 उच्च BP साठी काय खावे?', '💊 PCOD आहाराने कसे नियंत्रित करावे?', '😴 मला नेहमी थकवा का येतो?', '🫀 व्हिटॅमिन D च्या कमतरतेची लक्षणे?', '🏃 मधुमेहासाठी सर्वोत्तम व्यायाम?', '💧 मला किती पाणी प्यायला हवे?'],
+  en: ['🥗 What should I eat for high BP?', '💊 How do I manage PCOD with diet?', '😴 Why am I always tired?', '🫀 Signs of vitamin D deficiency?', '🏃 Best exercises for diabetes?', '💧 How much water should I drink?'],
+};
 
 export default function ChatScreen({ navigation }) {
   const { user } = useAuthStore();
-  const { isDark, language } = useThemeStore();
+  const { isDark, language, languageCode } = useThemeStore();
   const T = getTheme(isDark);
+  const s = tr(languageCode);
+
+  const SUGGESTED = SUGGESTED_BY_LANG[languageCode] || SUGGESTED_BY_LANG['en'];
 
   const [messages, setMessages] = useState([{
     id: 'welcome', role: 'assistant',
-    content: `Hi ${user?.name?.split(' ')[0] || 'there'}! 👋 I'm **Stevia AI**, your personal health assistant.\n\nI can help you with:\n- 🥗 Diet & nutrition advice\n- 💊 Medication questions\n- 🩺 Understanding symptoms\n- 🌿 Lifestyle improvements\n- 📊 Reading your lab reports\n\nAsk me anything about your health — I'll respond in **${language}**.`,
+    content: s('chatWelcome').replace('{name}', user?.name?.split(' ')[0] || ''),
     time: new Date(),
   }]);
   const [input, setInput] = useState('');
@@ -47,13 +50,14 @@ export default function ChatScreen({ navigation }) {
     setInput('');
     setLoading(true);
     try {
-      const apiMessages = newMessages.map(m => ({ role: m.role, content: m.content }));
-      if (language !== 'English') {
-        apiMessages[0] = { ...apiMessages[0], content: `[Respond in ${language} language only]\n\n${apiMessages[0].content}` };
-      }
+      const apiMessages = newMessages
+        .filter(m => m.id !== 'welcome')
+        .map(m => ({ role: m.role, content: m.content }));
+      // ── Pass language so AI always responds in selected language ──
       const reply = await sendHealthChatMessage({
         messages: apiMessages,
         userProfile: { age: user?.age || 25, gender: user?.gender || 'unknown', conditions: user?.conditions || '', medications: user?.medications || '' },
+        language,  // ← THIS is the fix — was missing before
       });
       setMessages(prev => [...prev, { id: `a_${Date.now()}`, role: 'assistant', content: reply, time: new Date() }]);
     } catch (e) {
@@ -105,7 +109,7 @@ export default function ChatScreen({ navigation }) {
             <Ionicons name="leaf" size={20} color="#fff" />
           </LinearGradient>
           <View>
-            <Text style={styles.aiName}>Stevia AI</Text>
+            <Text style={styles.aiName}>{s('chatTitle')}</Text>
             <View style={styles.onlineRow}>
               <View style={styles.onlineDot} />
               <Text style={styles.onlineTxt}>Online · {language}</Text>
@@ -142,7 +146,7 @@ export default function ChatScreen({ navigation }) {
               {/* Ada Health-style suggestion chips */}
               {messages.length <= 1 && (
                 <View style={styles.suggestions}>
-                  <Text style={[styles.suggestTitle, { color: T.textMuted }]}>Suggested questions</Text>
+                  <Text style={[styles.suggestTitle, { color: T.textMuted }]}>{s('suggestedQuestions')}</Text>
                   <View style={styles.suggestGrid}>
                     {SUGGESTED.map((q, i) => (
                       <TouchableOpacity key={i} onPress={() => sendMessage(q)} activeOpacity={0.8}

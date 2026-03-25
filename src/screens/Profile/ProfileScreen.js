@@ -13,7 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../store/authStore';
 import { useHealthStore } from '../../store/healthStore';
-import { useThemeStore, getTheme } from '../../store/themeStore';
+import { useThemeStore, getTheme, tr } from '../../store/themeStore';
 
 const LANGUAGES = [
   { label: 'English',   code: 'en', native: 'English'    },
@@ -49,21 +49,24 @@ function MenuRow({ icon, iconBg, label, sub, right, onPress, danger }) {
 export default function ProfileScreen({ navigation }) {
   const { user, logout } = useAuthStore();
   const { reminders, labReports, familyMembers } = useHealthStore();
-  const { isDark, setDark, language, setLanguage } = useThemeStore();
+  const { isDark, setDark, language, languageCode, setLanguage } = useThemeStore();
   const T = getTheme(isDark);
+  const s = tr(languageCode);
   const [notifOn, setNotifOn] = useState(true);
   const [showLang, setShowLang] = useState(false);
 
   const handleLanguage = async (lang) => {
     await setLanguage(lang.label, lang.code);
     setShowLang(false);
-    Alert.alert('🌐 Language Updated', `Stevia AI will now respond in ${lang.label} (${lang.native}).`);
+    // Show alert in the NEW language immediately
+    const newS = tr(lang.code);
+    Alert.alert(`🌐 ${newS('languageUpdated')}`, `${newS('languageUpdatedMsg')} ${lang.native}`);
   };
 
   const handleLogout = () => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out of Stevia Care?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign Out', style: 'destructive', onPress: logout },
+    Alert.alert(s('signOut'), 'Are you sure you want to sign out of Stevia Care?', [
+      { text: s('cancel'), style: 'cancel' },
+      { text: s('signOut'), style: 'destructive', onPress: logout },
     ]);
   };
 
