@@ -17,7 +17,7 @@ const SPECIALITIES = [
   { id: 'derm',       label: 'Skin',         icon: 'body',                 color: '#F59E0B' },
   { id: 'ortho',      label: 'Ortho',        icon: 'fitness',              color: '#3B82F6' },
   { id: 'gynae',      label: 'Gynaecology',  icon: 'rose',                 color: '#EC4899' },
-  { id: 'neuro',      label: 'Neurology',    icon: 'brain',                color: '#8B5CF6' },
+  { id: 'neuro',      label: 'Neurology',    icon: 'flash',                color: '#8B5CF6' },
   { id: 'pedia',      label: 'Paediatrics',  icon: 'happy',                color: '#06B6D4' },
   { id: 'dental',     label: 'Dental',       icon: 'color-wand',           color: '#14B8A6' },
   { id: 'eye',        label: 'Eye',          icon: 'eye',                  color: '#0EA5E9' },

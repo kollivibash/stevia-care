@@ -87,13 +87,15 @@ export default function FamilyScreen({ navigation }) {
               <Text style={styles.fscLabel}>Family Health Score</Text>
               <Text style={styles.fscNum}>{familyScore}<Text style={styles.fscOf}>/100</Text></Text>
               <Text style={styles.fscStatus}>
-                {familyScore >= 80 ? '🟢 Excellent' : familyScore >= 60 ? '🟡 Good' : '🔴 Needs Attention'}
+                {familyScore >= 80 ? 'Excellent' : familyScore >= 60 ? 'Good' : 'Needs Attention'}
               </Text>
             </View>
             <View style={styles.memberAvatarRow}>
               {familyMembers.slice(0, 4).map((m, i) => (
                 <View key={i} style={[styles.miniAvatar, { marginLeft: i > 0 ? -10 : 0, backgroundColor: RELATION_COLORS[m.relation] || '#16A34A' }]}>
-                  <Text style={{ fontSize: 14 }}>{m.avatar || '👤'}</Text>
+                  <Text style={{ color: '#fff', fontSize: 11, fontFamily: 'Nunito_900Black' }}>
+                    {(m.name || 'U')[0].toUpperCase()}
+                  </Text>
                 </View>
               ))}
               {familyMembers.length > 4 && (
@@ -122,7 +124,9 @@ export default function FamilyScreen({ navigation }) {
         {/* Member Cards — Practo / Apple Health inspired */}
         {familyMembers.length === 0 ? (
           <View style={[styles.emptyCard, { backgroundColor: T.card }]}>
-            <Text style={{ fontSize: 56 }}>👨‍👩‍👧‍👦</Text>
+            <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#DCFCE7', alignItems: 'center', justifyContent: 'center', marginBottom: 4 }}>
+              <Ionicons name="people" size={44} color="#16A34A" />
+            </View>
             <Text style={[styles.emptyTitle, { color: T.text }]}>Add your family</Text>
             <Text style={[styles.emptySub, { color: T.textMuted }]}>Manage health for everyone you care about — parents, spouse, children</Text>
             <TouchableOpacity onPress={() => navigation.navigate('AddMember')} activeOpacity={0.88}>
@@ -142,8 +146,10 @@ export default function FamilyScreen({ navigation }) {
                 onPress={() => navigation.navigate('FamilyInsights', { memberId: member.id })} activeOpacity={0.88}>
                 <View style={styles.memberTop}>
                   {/* Avatar */}
-                  <View style={[styles.memberAvatar, { backgroundColor: relColor + '18', borderColor: relColor + '40' }]}>
-                    <Text style={{ fontSize: 28 }}>{member.avatar || '👤'}</Text>
+                  <View style={[styles.memberAvatar, { backgroundColor: relColor + '18', borderColor: relColor + '40', alignItems: 'center', justifyContent: 'center' }]}>
+                    <Text style={{ fontSize: 24, fontFamily: 'Nunito_900Black', color: relColor }}>
+                      {(member.name || 'U')[0].toUpperCase()}
+                    </Text>
                   </View>
                   {/* Info */}
                   <View style={{ flex: 1 }}>

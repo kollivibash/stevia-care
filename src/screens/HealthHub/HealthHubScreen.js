@@ -18,8 +18,6 @@ const { width } = Dimensions.get('window');
 
 const getModules = (s) => [
   { id: 'lab',     title: s('labAnalyzer'),        sub: s('labAnalyzerSub'),        icon: 'flask',               colors: ['#5B21B6','#7C3AED'], bg: '#EDE9FE', ic: '#7C3AED', tag: 'AI',        nav: 'LabHome'          },
-  { id: 'rx',      title: s('prescriptionReader'),  sub: s('prescriptionReaderSub'), icon: 'document-text',       colors: ['#065F46','#16A34A'], bg: '#DCFCE7', ic: '#16A34A', tag: '🔥 New',    nav: 'HandwrittenRx'    },
-  { id: 'drug',    title: s('drugInteractions'),    sub: s('drugInteractionsSub'),   icon: 'warning',             colors: ['#1E1B4B','#4F46E5'], bg: '#EEF2FF', ic: '#4F46E5', tag: '🔥 New',    nav: 'DrugInteraction'  },
   { id: 'meds',    title: s('medicineTracker'),     sub: s('medicineTrackerSub'),    icon: 'medical',             colors: ['#92400E','#F59E0B'], bg: '#FEF3C7', ic: '#F59E0B', tag: 'Reminders', nav: 'RemindersHome'    },
   { id: 'symptom', title: s('symptomChecker'),      sub: s('symptomCheckerSub'),     icon: 'search-circle',       colors: ['#0C4A6E','#0EA5E9'], bg: '#E0F2FE', ic: '#0EA5E9', tag: 'AI',        nav: 'SymptomChecker'   },
   { id: 'ai',      title: s('askStevia'),           sub: s('askSteviaSub'),          icon: 'chatbubble-ellipses', colors: ['#3730A3','#6366F1'], bg: '#EEF2FF', ic: '#6366F1', tag: 'AI Chat',   nav: 'ChatScreen'       },
