@@ -117,8 +117,8 @@ export const useAuthStore = create((set, get) => ({
   demoLogin: () => {
     set({
       user: {
-        id: 'demo_001', name: 'Vib', age: 21,
-        gender: 'male', email: 'vib@steviacare.in',
+        id: 'demo_001', name: 'Guest User', age: 30,
+        gender: 'male', email: 'guest@steviacare.in',
         conditions: '', medications: '', blood_group: '',
       },
       token:           'demo_token',
