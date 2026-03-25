@@ -24,36 +24,36 @@ import { useThemeStore, getTheme, t } from '../../store/themeStore';
 const { width } = Dimensions.get('window');
 
 const ALL_TIPS = [
-  { icon: '💧', text: 'Drink 8 glasses of water daily to boost kidney health.', color: '#0EA5E9', bg: '#F0F9FF' },
-  { icon: '🥗', text: 'Eat a rainbow — 5 servings of fruits and vegetables daily.', color: '#16A34A', bg: '#F0FDF4' },
-  { icon: '🚶', text: '10,000 steps a day reduces heart disease risk by 30%.', color: '#F59E0B', bg: '#FFFBEB' },
-  { icon: '😴', text: '7–8 hours of sleep improves immunity and memory.', color: '#7C3AED', bg: '#F5F3FF' },
-  { icon: '🧘', text: '10 minutes of meditation daily reduces stress by 20%.', color: '#EC4899', bg: '#FDF2F8' },
-  { icon: '🫀', text: 'Check your blood pressure regularly. Normal: below 120/80.', color: '#EF4444', bg: '#FFF5F5' },
-  { icon: '🌿', text: 'Turmeric with black pepper boosts anti-inflammatory benefits.', color: '#16A34A', bg: '#F0FDF4' },
-  { icon: '🍋', text: 'Warm lemon water each morning kickstarts your digestion.', color: '#F59E0B', bg: '#FFFBEB' },
-  { icon: '🫁', text: 'Deep breathing for 5 minutes lowers blood pressure.', color: '#0EA5E9', bg: '#F0F9FF' },
-  { icon: '🥜', text: 'A handful of nuts daily protects your heart.', color: '#92400E', bg: '#FEF3C7' },
-  { icon: '☀️', text: '20 minutes of morning sunlight gives you natural Vitamin D.', color: '#D97706', bg: '#FFFBEB' },
-  { icon: '🩺', text: 'Annual checkups catch 80% of chronic conditions early.', color: '#EF4444', bg: '#FFF5F5' },
-  { icon: '🌙', text: 'Avoid screens 1 hour before bed for better sleep quality.', color: '#7C3AED', bg: '#F5F3FF' },
-  { icon: '💊', text: 'Never skip prescribed medicines — consistency matters most.', color: '#EC4899', bg: '#FDF2F8' },
-  { icon: '🧠', text: 'Learning a new skill daily keeps your brain sharp.', color: '#6366F1', bg: '#EEF2FF' },
-  { icon: '🐟', text: 'Eat fatty fish twice a week — Omega-3 protects your heart.', color: '#16A34A', bg: '#F0FDF4' },
-  { icon: '🍌', text: 'Bananas provide instant energy and regulate heart rhythm.', color: '#F59E0B', bg: '#FFFBEB' },
-  { icon: '🫂', text: 'Strong social connections add up to 7 years to your lifespan.', color: '#10B981', bg: '#ECFDF5' },
-  { icon: '🏊', text: 'Swimming 30 min burns as many calories as running.', color: '#0EA5E9', bg: '#F0F9FF' },
-  { icon: '🩸', text: 'Check your HbA1c once a year — early detection saves lives.', color: '#EF4444', bg: '#FFF5F5' },
-  { icon: '🌾', text: 'Whole grains reduce diabetes risk by 30% vs refined grains.', color: '#92400E', bg: '#FEF3C7' },
-  { icon: '🫐', text: 'Blueberries improve memory — eat them 3 times a week.', color: '#6366F1', bg: '#EEF2FF' },
-  { icon: '🧃', text: 'Sugary drinks are a top cause of obesity. Switch to water.', color: '#EF4444', bg: '#FFF5F5' },
-  { icon: '🏋️', text: 'Strength training twice weekly prevents bone density loss.', color: '#8B5CF6', bg: '#F5F3FF' },
-  { icon: '🥚', text: 'Eggs are one of the most complete proteins — safe daily.', color: '#F59E0B', bg: '#FFFBEB' },
-  { icon: '🫶', text: 'Call someone you love today — it reduces stress hormones.', color: '#EC4899', bg: '#FDF2F8' },
-  { icon: '🌊', text: '30 seconds of cold water in shower boosts your immunity.', color: '#0EA5E9', bg: '#F0F9FF' },
-  { icon: '🦷', text: 'Brushing twice daily — oral health links directly to heart.', color: '#6366F1', bg: '#EEF2FF' },
-  { icon: '🫖', text: 'Green tea antioxidants reduce inflammation and sharpen focus.', color: '#16A34A', bg: '#F0FDF4' },
-  { icon: '🧂', text: 'Cut sodium — high salt raises BP and strains kidneys.', color: '#64748B', bg: '#F8FAFC' },
+  { icon: 'water-outline',        text: 'Drink 8 glasses of water daily to boost kidney health.',          color: '#0EA5E9', bg: '#F0F9FF' },
+  { icon: 'leaf-outline',         text: 'Eat a rainbow — 5 servings of fruits and vegetables daily.',       color: '#16A34A', bg: '#F0FDF4' },
+  { icon: 'walk-outline',         text: '10,000 steps a day reduces heart disease risk by 30%.',            color: '#F59E0B', bg: '#FFFBEB' },
+  { icon: 'moon-outline',         text: '7–8 hours of sleep improves immunity and memory.',                 color: '#7C3AED', bg: '#F5F3FF' },
+  { icon: 'body-outline',         text: '10 minutes of meditation daily reduces stress by 20%.',            color: '#EC4899', bg: '#FDF2F8' },
+  { icon: 'heart-outline',        text: 'Check your blood pressure regularly. Normal: below 120/80.',      color: '#EF4444', bg: '#FFF5F5' },
+  { icon: 'leaf-outline',         text: 'Turmeric with black pepper boosts anti-inflammatory benefits.',    color: '#16A34A', bg: '#F0FDF4' },
+  { icon: 'sunny-outline',        text: 'Warm lemon water each morning kickstarts your digestion.',         color: '#F59E0B', bg: '#FFFBEB' },
+  { icon: 'cloud-outline',        text: 'Deep breathing for 5 minutes lowers blood pressure.',              color: '#0EA5E9', bg: '#F0F9FF' },
+  { icon: 'nutrition-outline',    text: 'A handful of nuts daily protects your heart.',                     color: '#92400E', bg: '#FEF3C7' },
+  { icon: 'sunny-outline',        text: '20 minutes of morning sunlight gives you natural Vitamin D.',      color: '#D97706', bg: '#FFFBEB' },
+  { icon: 'medkit-outline',       text: 'Annual checkups catch 80% of chronic conditions early.',           color: '#EF4444', bg: '#FFF5F5' },
+  { icon: 'moon-outline',         text: 'Avoid screens 1 hour before bed for better sleep quality.',        color: '#7C3AED', bg: '#F5F3FF' },
+  { icon: 'medical-outline',      text: 'Never skip prescribed medicines — consistency matters most.',      color: '#EC4899', bg: '#FDF2F8' },
+  { icon: 'flash-outline',        text: 'Learning a new skill daily keeps your brain sharp.',               color: '#6366F1', bg: '#EEF2FF' },
+  { icon: 'fish-outline',         text: 'Eat fatty fish twice a week — Omega-3 protects your heart.',       color: '#16A34A', bg: '#F0FDF4' },
+  { icon: 'nutrition-outline',    text: 'Bananas provide instant energy and regulate heart rhythm.',         color: '#F59E0B', bg: '#FFFBEB' },
+  { icon: 'people-outline',       text: 'Strong social connections add up to 7 years to your lifespan.',    color: '#10B981', bg: '#ECFDF5' },
+  { icon: 'water-outline',        text: 'Swimming 30 min burns as many calories as running.',               color: '#0EA5E9', bg: '#F0F9FF' },
+  { icon: 'bandage-outline',      text: 'Check your HbA1c once a year — early detection saves lives.',      color: '#EF4444', bg: '#FFF5F5' },
+  { icon: 'leaf-outline',         text: 'Whole grains reduce diabetes risk by 30% vs refined grains.',      color: '#92400E', bg: '#FEF3C7' },
+  { icon: 'color-fill-outline',   text: 'Blueberries improve memory — eat them 3 times a week.',            color: '#6366F1', bg: '#EEF2FF' },
+  { icon: 'warning-outline',      text: 'Sugary drinks are a top cause of obesity. Switch to water.',       color: '#EF4444', bg: '#FFF5F5' },
+  { icon: 'barbell-outline',      text: 'Strength training twice weekly prevents bone density loss.',        color: '#8B5CF6', bg: '#F5F3FF' },
+  { icon: 'egg-outline',          text: 'Eggs are one of the most complete proteins — safe daily.',         color: '#F59E0B', bg: '#FFFBEB' },
+  { icon: 'heart-outline',        text: 'Call someone you love today — it reduces stress hormones.',        color: '#EC4899', bg: '#FDF2F8' },
+  { icon: 'snow-outline',         text: '30 seconds of cold water in shower boosts your immunity.',         color: '#0EA5E9', bg: '#F0F9FF' },
+  { icon: 'happy-outline',        text: 'Brushing twice daily — oral health links directly to heart.',      color: '#6366F1', bg: '#EEF2FF' },
+  { icon: 'cafe-outline',         text: 'Green tea antioxidants reduce inflammation and sharpen focus.',     color: '#16A34A', bg: '#F0FDF4' },
+  { icon: 'alert-circle-outline', text: 'Cut sodium — high salt raises BP and strains kidneys.',            color: '#64748B', bg: '#F8FAFC' },
 ];
 
 // Apple Health-inspired ring component
@@ -136,7 +136,8 @@ export default function DashboardScreen({ navigation }) {
   const greeting = hour < 12 ? t(languageCode, 'goodMorning')
     : hour < 17 ? t(languageCode, 'goodAfternoon')
     : t(languageCode, 'goodEvening');
-  const greetEmoji = hour < 5 ? '🌙' : hour < 12 ? '☀️' : hour < 17 ? '👋' : hour < 20 ? '🌤' : '🌙';
+  const greetIcon  = hour < 5 ? 'moon' : hour < 12 ? 'sunny' : hour < 17 ? 'hand-right' : hour < 20 ? 'partly-sunny' : 'moon';
+  const greetIconColor = hour < 12 ? '#FCD34D' : hour < 17 ? '#FDE68A' : '#A78BFA';
 
   const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
   const tip = ALL_TIPS[dayOfYear % ALL_TIPS.length];
@@ -163,7 +164,10 @@ export default function DashboardScreen({ navigation }) {
             {/* Top row */}
             <View style={styles.headerTop}>
               <View style={{ flex: 1 }}>
-                <Text style={styles.greetText}>{greeting} {greetEmoji}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                  <Text style={styles.greetText}>{greeting}</Text>
+                  <Ionicons name={greetIcon} size={14} color={greetIconColor} />
+                </View>
                 <Text style={styles.nameText}>{user?.name?.split(' ')[0] || 'there'}</Text>
               </View>
               <View style={styles.headerActions}>
@@ -218,10 +222,13 @@ export default function DashboardScreen({ navigation }) {
           {/* ── NOOM-style Daily Tip ── */}
           <TouchableOpacity activeOpacity={0.9} style={[styles.tipCard, { backgroundColor: isDark ? T.card : tip.bg, borderColor: tip.color + '30' }]}>
             <View style={[styles.tipEmoji, { backgroundColor: tip.color + '18' }]}>
-              <Text style={{ fontSize: 24 }}>{tip.icon}</Text>
+              <Ionicons name={tip.icon} size={26} color={tip.color} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={[styles.tipLabel, { color: tip.color }]}>💡 {t(languageCode, 'dailyTip')}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 5 }}>
+                <Ionicons name="bulb-outline" size={11} color={tip.color} />
+                <Text style={[styles.tipLabel, { color: tip.color, marginBottom: 0 }]}>{t(languageCode, 'dailyTip')}</Text>
+              </View>
               <Text style={[styles.tipBody, { color: T.text }]}>{tip.text}</Text>
             </View>
           </TouchableOpacity>
@@ -231,7 +238,10 @@ export default function DashboardScreen({ navigation }) {
             <View style={styles.section}>
               <View style={styles.sectionHead}>
                 <View>
-                  <Text style={[styles.sectionTitle, { color: T.text }]}>💊 {t(languageCode, 'todayMeds')}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <Ionicons name="medical" size={16} color="#F59E0B" />
+                  <Text style={[styles.sectionTitle, { color: T.text }]}>{t(languageCode, 'todayMeds')}</Text>
+                </View>
                   <Text style={[styles.sectionSub, { color: T.textMuted }]}>{todayMeds.length} medicine{todayMeds.length !== 1 ? 's' : ''} today</Text>
                 </View>
                 <TouchableOpacity onPress={() => navigation.navigate('Health', { screen: 'RemindersHome' })}>
@@ -263,7 +273,10 @@ export default function DashboardScreen({ navigation }) {
           <View style={styles.section}>
             <View style={styles.sectionHead}>
               <View>
-                <Text style={[styles.sectionTitle, { color: T.text }]}>🩺 {t(languageCode, 'healthTools')}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <Ionicons name="medkit-outline" size={16} color="#16A34A" />
+                  <Text style={[styles.sectionTitle, { color: T.text }]}>{t(languageCode, 'healthTools')}</Text>
+                </View>
                 <Text style={[styles.sectionSub, { color: T.textMuted }]}>Your complete health suite</Text>
               </View>
             </View>
@@ -311,7 +324,10 @@ export default function DashboardScreen({ navigation }) {
           <View style={[styles.notifSheet, { backgroundColor: T.card }]}>
             <View style={styles.sheetHandle} />
             <View style={styles.notifHead}>
-              <Text style={[styles.notifTitle, { color: T.text }]}>🔔 Today's Reminders</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Ionicons name="notifications" size={18} color="#F59E0B" />
+                <Text style={[styles.notifTitle, { color: T.text }]}>Today's Reminders</Text>
+              </View>
               <TouchableOpacity onPress={() => setShowNotif(false)}>
                 <Ionicons name="close-circle" size={24} color={T.textMuted} />
               </TouchableOpacity>
